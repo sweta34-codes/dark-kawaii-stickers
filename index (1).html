@@ -1,0 +1,667 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Dark Kawaii Sticker Pack</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet"/>
+<style>
+  :root {
+    --bg: #070010;
+    --purple: #9933ff;
+    --pink: #ff44cc;
+    --lavender: #c99ee8;
+    --dark: #1a0a2e;
+    --glow: #cc44ff;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--bg);
+    font-family: 'Space Mono', monospace;
+    color: white;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* Noise texture overlay */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 0;
+    opacity: 0.5;
+  }
+
+  header {
+    text-align: center;
+    padding: 3rem 1rem 1.5rem;
+    position: relative;
+    z-index: 1;
+  }
+
+  header h1 {
+    font-family: 'Syne', sans-serif;
+    font-size: clamp(2rem, 6vw, 4rem);
+    font-weight: 800;
+    background: linear-gradient(135deg, #ff44cc, #cc44ff, #9933ff);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    letter-spacing: -1px;
+    text-transform: uppercase;
+  }
+
+  header p {
+    color: #7744aa;
+    font-size: 0.75rem;
+    letter-spacing: 4px;
+    margin-top: 0.5rem;
+    text-transform: uppercase;
+  }
+
+  .pack-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 2rem;
+    padding: 2rem 3rem;
+    max-width: 1100px;
+    margin: 0 auto;
+    position: relative;
+    z-index: 1;
+  }
+
+  .sticker-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.75rem;
+    cursor: pointer;
+    transition: transform 0.3s cubic-bezier(.34,1.56,.64,1);
+  }
+
+  .sticker-card:hover {
+    transform: scale(1.08) rotate(-1deg);
+  }
+
+  .sticker-card:hover svg {
+    filter: drop-shadow(0 0 18px var(--glow));
+  }
+
+  .sticker-card svg {
+    width: 180px;
+    height: 180px;
+    transition: filter 0.3s ease;
+    filter: drop-shadow(0 0 8px #6600cc88);
+  }
+
+  .sticker-label {
+    font-family: 'Syne', sans-serif;
+    font-size: 0.8rem;
+    font-weight: 700;
+    color: var(--lavender);
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    text-align: center;
+  }
+
+  .mood-tag {
+    font-size: 0.6rem;
+    color: #6633aa;
+    text-transform: uppercase;
+    letter-spacing: 3px;
+  }
+
+  /* Meme Section */
+  .meme-section {
+    max-width: 700px;
+    margin: 1rem auto 4rem;
+    padding: 0 2rem;
+    position: relative;
+    z-index: 1;
+  }
+
+  .section-title {
+    font-family: 'Syne', sans-serif;
+    font-size: 1.2rem;
+    font-weight: 800;
+    color: var(--pink);
+    text-transform: uppercase;
+    letter-spacing: 4px;
+    text-align: center;
+    margin-bottom: 1.5rem;
+  }
+
+  .meme-builder {
+    background: #0f0018;
+    border: 1px solid #3d1a5a;
+    border-radius: 16px;
+    padding: 2rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1.5rem;
+  }
+
+  .meme-preview {
+    position: relative;
+    width: 320px;
+    height: 320px;
+    background: linear-gradient(135deg, #0a0015, #150020);
+    border-radius: 12px;
+    border: 1px solid #3d1a5a;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+  }
+
+  .meme-preview::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(circle at 50% 60%, #2a0a3a44, transparent 70%);
+  }
+
+  .meme-preview svg {
+    width: 140px;
+    height: 140px;
+    position: relative;
+    z-index: 1;
+    filter: drop-shadow(0 0 12px #cc44ff88);
+  }
+
+  .meme-top-text {
+    position: absolute;
+    top: 16px;
+    left: 0; right: 0;
+    text-align: center;
+    font-family: 'Syne', sans-serif;
+    font-weight: 800;
+    font-size: 1rem;
+    color: white;
+    text-shadow: 0 0 10px #cc44ff, 2px 2px 0 #000;
+    z-index: 2;
+    padding: 0 12px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+
+  .meme-bottom-text {
+    position: absolute;
+    bottom: 16px;
+    left: 0; right: 0;
+    text-align: center;
+    font-family: 'Syne', sans-serif;
+    font-weight: 800;
+    font-size: 1rem;
+    color: var(--pink);
+    text-shadow: 0 0 10px #ff44cc, 2px 2px 0 #000;
+    z-index: 2;
+    padding: 0 12px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+
+  .meme-inputs {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    width: 100%;
+  }
+
+  .meme-inputs input {
+    background: #1a0a2e;
+    border: 1px solid #4a1a6e;
+    border-radius: 8px;
+    color: white;
+    font-family: 'Space Mono', monospace;
+    font-size: 0.8rem;
+    padding: 0.65rem 1rem;
+    outline: none;
+    width: 100%;
+    transition: border-color 0.2s;
+  }
+
+  .meme-inputs input:focus {
+    border-color: var(--purple);
+    box-shadow: 0 0 8px #9933ff44;
+  }
+
+  .meme-inputs input::placeholder { color: #4a2a6a; }
+
+  .mood-selector {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .mood-btn {
+    background: #1a0a2e;
+    border: 1px solid #3d1a5a;
+    border-radius: 20px;
+    color: #9977bb;
+    font-family: 'Space Mono', monospace;
+    font-size: 0.65rem;
+    padding: 0.4rem 0.9rem;
+    cursor: pointer;
+    transition: all 0.2s;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+
+  .mood-btn:hover, .mood-btn.active {
+    background: #3d1a5a;
+    border-color: var(--purple);
+    color: var(--lavender);
+    box-shadow: 0 0 8px #9933ff44;
+  }
+
+  .dl-btn {
+    background: linear-gradient(135deg, #6600cc, #cc0088);
+    border: none;
+    border-radius: 10px;
+    color: white;
+    font-family: 'Syne', sans-serif;
+    font-weight: 700;
+    font-size: 0.8rem;
+    padding: 0.75rem 2rem;
+    cursor: pointer;
+    text-transform: uppercase;
+    letter-spacing: 3px;
+    transition: all 0.2s;
+    box-shadow: 0 0 20px #6600cc44;
+  }
+
+  .dl-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 0 30px #9933ff88;
+  }
+
+  /* Floating sparkles */
+  .sparkle {
+    position: fixed;
+    pointer-events: none;
+    font-size: 1rem;
+    animation: floatUp 4s linear infinite;
+    opacity: 0;
+    z-index: 0;
+  }
+
+  @keyframes floatUp {
+    0% { opacity: 0; transform: translateY(0) scale(0.5); }
+    20% { opacity: 0.7; }
+    80% { opacity: 0.4; }
+    100% { opacity: 0; transform: translateY(-100px) scale(1.2); }
+  }
+
+  @keyframes pulse-glow {
+    0%, 100% { filter: drop-shadow(0 0 8px #6600cc88); }
+    50% { filter: drop-shadow(0 0 20px #cc44ffaa); }
+  }
+
+  .sticker-card svg {
+    animation: pulse-glow 3s ease-in-out infinite;
+  }
+
+  .divider {
+    width: 100%;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, #3d1a5a, transparent);
+    margin: 1rem 0 2.5rem;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>☆ Dark Kawaii Pack ☆</h1>
+  <p>6 moods · gen z edition · 2026</p>
+</header>
+
+<div class="divider"></div>
+
+<div class="pack-grid">
+
+  <!-- 1. Dead Inside -->
+  <div class="sticker-card">
+    <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <radialGradient id="bg1" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#2a0a3a"/><stop offset="100%" stop-color="#0d0010"/></radialGradient>
+        <radialGradient id="face1" cx="50%" cy="45%" r="52%"><stop offset="0%" stop-color="#e8c8f8"/><stop offset="100%" stop-color="#c99ee8"/></radialGradient>
+      </defs>
+      <circle cx="100" cy="100" r="95" fill="url(#bg1)"/>
+      <circle cx="100" cy="108" r="72" fill="white"/>
+      <ellipse cx="100" cy="108" rx="60" ry="57" fill="url(#face1)" stroke="#1a0a2e" stroke-width="2.5"/>
+      <!-- flat hair -->
+      <path d="M48 95 Q50 60 100 55 Q150 60 152 95" fill="#150820" stroke="#1a0a2e" stroke-width="2"/>
+      <!-- dead X eyes -->
+      <line x1="72" y1="95" x2="84" y2="107" stroke="#1a0a2e" stroke-width="4" stroke-linecap="round"/>
+      <line x1="84" y1="95" x2="72" y2="107" stroke="#1a0a2e" stroke-width="4" stroke-linecap="round"/>
+      <line x1="116" y1="95" x2="128" y2="107" stroke="#1a0a2e" stroke-width="4" stroke-linecap="round"/>
+      <line x1="128" y1="95" x2="116" y2="107" stroke="#1a0a2e" stroke-width="4" stroke-linecap="round"/>
+      <!-- flat mouth -->
+      <line x1="86" y1="128" x2="114" y2="128" stroke="#1a0a2e" stroke-width="3" stroke-linecap="round"/>
+      <!-- rosy cheeks -->
+      <ellipse cx="70" cy="118" rx="12" ry="7" fill="#cc44aa" opacity="0.3"/>
+      <ellipse cx="130" cy="118" rx="12" ry="7" fill="#cc44aa" opacity="0.3"/>
+      <!-- "☆" on forehead -->
+      <text x="92" y="82" font-size="12" fill="#6633aa">☆</text>
+    </svg>
+    <span class="sticker-label">dead inside</span>
+    <span class="mood-tag">no thoughts</span>
+  </div>
+
+  <!-- 2. Crying but make it cute -->
+  <div class="sticker-card">
+    <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <radialGradient id="bg2" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#0a1a3a"/><stop offset="100%" stop-color="#000d20"/></radialGradient>
+        <radialGradient id="face2" cx="50%" cy="45%" r="52%"><stop offset="0%" stop-color="#c8d8f8"/><stop offset="100%" stop-color="#9eaee8"/></radialGradient>
+        <radialGradient id="eye2" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#44aaff"/><stop offset="100%" stop-color="#0044cc"/></radialGradient>
+      </defs>
+      <circle cx="100" cy="100" r="95" fill="url(#bg2)"/>
+      <circle cx="100" cy="108" r="72" fill="white"/>
+      <ellipse cx="100" cy="108" rx="60" ry="57" fill="url(#face2)" stroke="#0a1a3a" stroke-width="2.5"/>
+      <!-- hair -->
+      <path d="M45 100 Q48 58 100 53 Q152 58 155 100" fill="#101830" stroke="#0a1a3a" stroke-width="2"/>
+      <path d="M60 60 Q55 42 62 32" fill="none" stroke="#101830" stroke-width="5" stroke-linecap="round"/>
+      <path d="M100 53 Q98 35 103 26" fill="none" stroke="#101830" stroke-width="5" stroke-linecap="round"/>
+      <path d="M140 60 Q145 42 138 32" fill="none" stroke="#101830" stroke-width="5" stroke-linecap="round"/>
+      <!-- big teary eyes -->
+      <ellipse cx="78" cy="103" rx="14" ry="15" fill="#0d0020" stroke="#0a1a3a" stroke-width="2"/>
+      <ellipse cx="78" cy="103" rx="10" ry="11" fill="url(#eye2)"/>
+      <ellipse cx="78" cy="103" rx="5" ry="6" fill="#001433"/>
+      <circle cx="83" cy="98" r="3" fill="white" opacity="0.9"/>
+      <ellipse cx="122" cy="103" rx="14" ry="15" fill="#0d0020" stroke="#0a1a3a" stroke-width="2"/>
+      <ellipse cx="122" cy="103" rx="10" ry="11" fill="url(#eye2)"/>
+      <ellipse cx="122" cy="103" rx="5" ry="6" fill="#001433"/>
+      <circle cx="127" cy="98" r="3" fill="white" opacity="0.9"/>
+      <!-- tear streams -->
+      <path d="M74 116 Q72 128 70 138 Q68 145 72 148" fill="none" stroke="#44aaff" stroke-width="3" stroke-linecap="round" opacity="0.8"/>
+      <path d="M126 116 Q128 128 130 138 Q132 145 128 148" fill="none" stroke="#44aaff" stroke-width="3" stroke-linecap="round" opacity="0.8"/>
+      <!-- teardrop shapes -->
+      <ellipse cx="71" cy="150" rx="4" ry="5" fill="#44aaff" opacity="0.7"/>
+      <ellipse cx="129" cy="150" rx="4" ry="5" fill="#44aaff" opacity="0.7"/>
+      <!-- wobbly mouth -->
+      <path d="M85 128 Q93 122 100 123 Q107 122 115 128" fill="none" stroke="#0a1a3a" stroke-width="2.5" stroke-linecap="round"/>
+      <!-- star details -->
+      <text x="35" y="75" font-size="10" fill="#4488cc" opacity="0.6">✦</text>
+      <text x="152" y="72" font-size="8" fill="#4488cc" opacity="0.6">✦</text>
+    </svg>
+    <span class="sticker-label">it's giving tears</span>
+    <span class="mood-tag">chronically online</span>
+  </div>
+
+  <!-- 3. Unhinged -->
+  <div class="sticker-card">
+    <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <radialGradient id="bg3" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#3a0a0a"/><stop offset="100%" stop-color="#100000"/></radialGradient>
+        <radialGradient id="face3" cx="50%" cy="45%" r="52%"><stop offset="0%" stop-color="#f8c8c8"/><stop offset="100%" stop-color="#e89e9e"/></radialGradient>
+        <radialGradient id="eye3" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#ff3333"/><stop offset="100%" stop-color="#880000"/></radialGradient>
+      </defs>
+      <circle cx="100" cy="100" r="95" fill="url(#bg3)"/>
+      <circle cx="100" cy="108" r="72" fill="white"/>
+      <ellipse cx="100" cy="108" rx="60" ry="57" fill="url(#face3)" stroke="#1a0a0a" stroke-width="2.5"/>
+      <!-- wild hair -->
+      <path d="M42 100 Q35 55 65 45 Q85 35 100 38 Q115 35 135 45 Q165 55 158 100" fill="#1a0505" stroke="#1a0a0a" stroke-width="2"/>
+      <path d="M50 65 Q38 40 45 22" fill="none" stroke="#1a0505" stroke-width="6" stroke-linecap="round"/>
+      <path d="M75 42 Q70 18 80 8" fill="none" stroke="#1a0505" stroke-width="5" stroke-linecap="round"/>
+      <path x="100" d="M100 38 Q97 14 102 4" fill="none" stroke="#1a0505" stroke-width="6" stroke-linecap="round"/>
+      <path d="M125 42 Q130 18 120 8" fill="none" stroke="#1a0505" stroke-width="5" stroke-linecap="round"/>
+      <path d="M150 65 Q162 40 155 22" fill="none" stroke="#1a0505" stroke-width="6" stroke-linecap="round"/>
+      <!-- unhinged spiral eyes -->
+      <ellipse cx="78" cy="102" rx="13" ry="14" fill="#0d0000" stroke="#1a0a0a" stroke-width="2"/>
+      <ellipse cx="78" cy="102" rx="10" ry="11" fill="url(#eye3)"/>
+      <path d="M78 96 Q84 99 81 104 Q77 109 73 105 Q70 100 74 97 Q78 94 81 97" fill="none" stroke="#200000" stroke-width="1.5"/>
+      <circle cx="83" cy="97" r="3" fill="white" opacity="0.9"/>
+      <ellipse cx="122" cy="102" rx="13" ry="14" fill="#0d0000" stroke="#1a0a0a" stroke-width="2"/>
+      <ellipse cx="122" cy="102" rx="10" ry="11" fill="url(#eye3)"/>
+      <path d="M122 96 Q128 99 125 104 Q121 109 117 105 Q114 100 118 97 Q122 94 125 97" fill="none" stroke="#200000" stroke-width="1.5"/>
+      <circle cx="127" cy="97" r="3" fill="white" opacity="0.9"/>
+      <!-- big grin with teeth -->
+      <path d="M75 124 Q100 140 125 124" fill="#1a0505"/>
+      <path d="M80 124 L80 134 L88 127 L96 134 L100 127 L104 134 L112 127 L120 134 L120 124" fill="white" stroke="#1a0505" stroke-width="1"/>
+      <!-- squiggly aura lines -->
+      <path d="M30 80 Q22 70 30 60 Q38 50 30 40" fill="none" stroke="#ff3333" stroke-width="2" opacity="0.5" stroke-linecap="round"/>
+      <path d="M170 80 Q178 70 170 60 Q162 50 170 40" fill="none" stroke="#ff3333" stroke-width="2" opacity="0.5" stroke-linecap="round"/>
+    </svg>
+    <span class="sticker-label">unhinged era</span>
+    <span class="mood-tag">main character</span>
+  </div>
+
+  <!-- 4. NPC -->
+  <div class="sticker-card">
+    <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <radialGradient id="bg4" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#0a2a0a"/><stop offset="100%" stop-color="#000d00"/></radialGradient>
+        <radialGradient id="face4" cx="50%" cy="45%" r="52%"><stop offset="0%" stop-color="#c8f8cc"/><stop offset="100%" stop-color="#9ee8a2"/></radialGradient>
+      </defs>
+      <circle cx="100" cy="100" r="95" fill="url(#bg4)"/>
+      <circle cx="100" cy="108" r="72" fill="white"/>
+      <ellipse cx="100" cy="108" rx="60" ry="57" fill="url(#face4)" stroke="#0a1a0a" stroke-width="2.5"/>
+      <!-- robotic square hair -->
+      <rect x="40" y="55" width="120" height="45" rx="4" fill="#0a1a0a"/>
+      <rect x="44" y="59" width="112" height="37" rx="2" fill="#112211"/>
+      <!-- pixelated pixel eyes -->
+      <rect x="65" y="90" width="28" height="28" rx="3" fill="#0a1a0a" stroke="#0a1a0a" stroke-width="2"/>
+      <rect x="68" y="93" width="22" height="22" fill="#00ff44"/>
+      <rect x="74" y="99" width="10" height="10" fill="#003311"/>
+      <rect x="79" y="99" width="5" height="5" fill="#00ff44" opacity="0.5"/>
+      <rect x="107" y="90" width="28" height="28" rx="3" fill="#0a1a0a" stroke="#0a1a0a" stroke-width="2"/>
+      <rect x="110" y="93" width="22" height="22" fill="#00ff44"/>
+      <rect x="116" y="99" width="10" height="10" fill="#003311"/>
+      <rect x="121" y="99" width="5" height="5" fill="#00ff44" opacity="0.5"/>
+      <!-- flat line mouth with brackets -->
+      <text x="82" y="133" font-size="14" fill="#0a1a0a" font-family="monospace">___</text>
+      <!-- antenna -->
+      <line x1="100" y1="55" x2="100" y2="30" stroke="#0a1a0a" stroke-width="3" stroke-linecap="round"/>
+      <circle cx="100" cy="26" r="6" fill="#00ff44" opacity="0.9"/>
+      <!-- scanline effects -->
+      <line x1="44" y1="67" x2="156" y2="67" stroke="#00ff44" stroke-width="0.5" opacity="0.3"/>
+      <line x1="44" y1="75" x2="156" y2="75" stroke="#00ff44" stroke-width="0.5" opacity="0.3"/>
+      <line x1="44" y1="83" x2="156" y2="83" stroke="#00ff44" stroke-width="0.5" opacity="0.3"/>
+      <!-- % badge -->
+      <circle cx="145" cy="140" r="14" fill="#0a2a0a" stroke="#00ff44" stroke-width="2"/>
+      <text x="138" y="145" font-size="12" fill="#00ff44" font-family="monospace">NPC</text>
+    </svg>
+    <span class="sticker-label">NPC mode on</span>
+    <span class="mood-tag">low battery</span>
+  </div>
+
+  <!-- 5. Slay -->
+  <div class="sticker-card">
+    <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <radialGradient id="bg5" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#2a1a00"/><stop offset="100%" stop-color="#100800"/></radialGradient>
+        <radialGradient id="face5" cx="50%" cy="45%" r="52%"><stop offset="0%" stop-color="#f8e8c8"/><stop offset="100%" stop-color="#e8c89e"/></radialGradient>
+        <radialGradient id="eye5" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#ffaa00"/><stop offset="100%" stop-color="#cc5500"/></radialGradient>
+      </defs>
+      <circle cx="100" cy="100" r="95" fill="url(#bg5)"/>
+      <!-- gold aura rings -->
+      <circle cx="100" cy="108" r="74" fill="none" stroke="#ffaa00" stroke-width="1" opacity="0.4"/>
+      <circle cx="100" cy="108" r="78" fill="none" stroke="#ffaa00" stroke-width="0.5" opacity="0.2"/>
+      <circle cx="100" cy="108" r="72" fill="white"/>
+      <ellipse cx="100" cy="108" rx="60" ry="57" fill="url(#face5)" stroke="#1a0800" stroke-width="2.5"/>
+      <!-- crown -->
+      <path d="M65 68 L65 50 L80 62 L100 45 L120 62 L135 50 L135 68 Z" fill="#ffaa00" stroke="#cc7700" stroke-width="2"/>
+      <circle cx="100" cy="48" r="5" fill="#ff5500"/>
+      <circle cx="80" cy="60" r="4" fill="#ff5500"/>
+      <circle cx="120" cy="60" r="4" fill="#ff5500"/>
+      <!-- hair -->
+      <path d="M44 103 Q46 70 100 65 Q154 70 156 103" fill="#1a0800" stroke="#1a0800" stroke-width="2"/>
+      <!-- confident half-lidded eyes -->
+      <ellipse cx="78" cy="103" rx="14" ry="13" fill="#0d0000" stroke="#1a0800" stroke-width="2"/>
+      <ellipse cx="78" cy="103" rx="10" ry="10" fill="url(#eye5)"/>
+      <ellipse cx="78" cy="103" rx="5" ry="5" fill="#110500"/>
+      <!-- half lid -->
+      <path d="M64 96 Q78 92 92 96" fill="#1a0800" stroke="none"/>
+      <circle cx="82" cy="99" r="3" fill="white" opacity="0.9"/>
+      <ellipse cx="122" cy="103" rx="14" ry="13" fill="#0d0000" stroke="#1a0800" stroke-width="2"/>
+      <ellipse cx="122" cy="103" rx="10" ry="10" fill="url(#eye5)"/>
+      <ellipse cx="122" cy="103" rx="5" ry="5" fill="#110500"/>
+      <path d="M108 96 Q122 92 136 96" fill="#1a0800" stroke="none"/>
+      <circle cx="126" cy="99" r="3" fill="white" opacity="0.9"/>
+      <!-- smirk -->
+      <path d="M90 124 Q100 132 116 126" fill="none" stroke="#1a0800" stroke-width="3" stroke-linecap="round"/>
+      <!-- sparkles around -->
+      <text x="30" y="70" font-size="16" fill="#ffaa00" opacity="0.8">✦</text>
+      <text x="152" y="65" font-size="12" fill="#ffaa00" opacity="0.8">✦</text>
+      <text x="148" y="148" font-size="10" fill="#ffaa00" opacity="0.6">★</text>
+      <text x="38" y="145" font-size="10" fill="#ffaa00" opacity="0.6">★</text>
+      <!-- cheeks with highlight -->
+      <ellipse cx="67" cy="116" rx="11" ry="7" fill="#ffaa00" opacity="0.2"/>
+      <ellipse cx="133" cy="116" rx="11" ry="7" fill="#ffaa00" opacity="0.2"/>
+    </svg>
+    <span class="sticker-label">slay mode</span>
+    <span class="mood-tag">that girl era</span>
+  </div>
+
+  <!-- 6. Brainrot -->
+  <div class="sticker-card">
+    <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <radialGradient id="bg6" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#1a0a2e"/><stop offset="100%" stop-color="#0d0010"/></radialGradient>
+        <radialGradient id="face6" cx="50%" cy="45%" r="52%"><stop offset="0%" stop-color="#e8c8f8"/><stop offset="100%" stop-color="#c99ee8"/></radialGradient>
+        <radialGradient id="eye6" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#ff3cf0"/><stop offset="100%" stop-color="#8800cc"/></radialGradient>
+      </defs>
+      <circle cx="100" cy="100" r="95" fill="url(#bg6)"/>
+      <circle cx="100" cy="108" r="72" fill="white"/>
+      <ellipse cx="100" cy="108" rx="60" ry="57" fill="url(#face6)" stroke="#1a0a2e" stroke-width="2.5"/>
+      <!-- hair with ahoge -->
+      <path d="M44 100 Q46 62 100 57 Q154 62 156 100" fill="#150820" stroke="#1a0a2e" stroke-width="2"/>
+      <!-- ahoge (anime hair spike) -->
+      <path d="M100 57 Q96 30 106 18 Q112 30 104 57" fill="#150820" stroke="#1a0a2e" stroke-width="1.5"/>
+      <!-- dazed swirl eyes -->
+      <ellipse cx="78" cy="103" rx="14" ry="15" fill="#0d0010" stroke="#1a0a2e" stroke-width="2"/>
+      <ellipse cx="78" cy="103" rx="11" ry="12" fill="url(#eye6)"/>
+      <path d="M78 96 Q86 100 82 106 Q77 112 71 107 Q67 101 72 97 Q77 93 83 97" fill="none" stroke="#200030" stroke-width="2"/>
+      <circle cx="84" cy="97" r="3" fill="white" opacity="0.9"/>
+      <ellipse cx="122" cy="103" rx="14" ry="15" fill="#0d0010" stroke="#1a0a2e" stroke-width="2"/>
+      <ellipse cx="122" cy="103" rx="11" ry="12" fill="url(#eye6)"/>
+      <path d="M122 96 Q130 100 126 106 Q121 112 115 107 Q111 101 116 97 Q121 93 127 97" fill="none" stroke="#200030" stroke-width="2"/>
+      <circle cx="128" cy="97" r="3" fill="white" opacity="0.9"/>
+      <!-- 💀 on cheeks -->
+      <text x="56" y="122" font-size="13">💀</text>
+      <text x="122" y="122" font-size="13">💀</text>
+      <!-- open droopy mouth -->
+      <ellipse cx="100" cy="130" rx="12" ry="8" fill="#1a0a2e"/>
+      <ellipse cx="100" cy="130" rx="9" ry="5" fill="#2d0040"/>
+      <!-- floating symbols around head -->
+      <text x="25" y="88" font-size="11" fill="#cc44ff" opacity="0.7">?</text>
+      <text x="164" y="85" font-size="11" fill="#cc44ff" opacity="0.7">?</text>
+      <text x="30" y="115" font-size="9" fill="#ff44cc" opacity="0.6">~</text>
+      <text x="160" y="118" font-size="9" fill="#ff44cc" opacity="0.6">~</text>
+      <!-- small bat -->
+      <path d="M148 52 Q140 44 133 48 Q138 54 142 52 Q138 58 140 63 Q145 58 148 62 Q151 58 153 63 Q155 58 158 52 Q162 54 167 48 Q160 44 152 52 Z" fill="#3d1a5a" opacity="0.7"/>
+    </svg>
+    <span class="sticker-label">brainrot 💀</span>
+    <span class="mood-tag">certified cooked</span>
+  </div>
+
+</div>
+
+<div class="divider"></div>
+
+<!-- Meme Builder Section -->
+<div class="meme-section">
+  <p class="section-title">⚡ Meme Builder ⚡</p>
+  <div class="meme-builder">
+    <div class="meme-preview" id="memePreview">
+      <div class="meme-top-text" id="topText">POV: it's 3am</div>
+      <!-- default: dead inside sticker in meme -->
+      <svg id="memeFace" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <radialGradient id="mbg" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#2a0a3a"/><stop offset="100%" stop-color="#0d0010"/></radialGradient>
+          <radialGradient id="mface" cx="50%" cy="45%" r="52%"><stop offset="0%" stop-color="#e8c8f8"/><stop offset="100%" stop-color="#c99ee8"/></radialGradient>
+        </defs>
+        <circle cx="100" cy="100" r="95" fill="url(#mbg)"/>
+        <circle cx="100" cy="108" r="72" fill="white"/>
+        <ellipse cx="100" cy="108" rx="60" ry="57" fill="url(#mface)" stroke="#1a0a2e" stroke-width="2.5"/>
+        <path d="M48 95 Q50 60 100 55 Q150 60 152 95" fill="#150820" stroke="#1a0a2e" stroke-width="2"/>
+        <line x1="72" y1="95" x2="84" y2="107" stroke="#1a0a2e" stroke-width="4" stroke-linecap="round"/>
+        <line x1="84" y1="95" x2="72" y2="107" stroke="#1a0a2e" stroke-width="4" stroke-linecap="round"/>
+        <line x1="116" y1="95" x2="128" y2="107" stroke="#1a0a2e" stroke-width="4" stroke-linecap="round"/>
+        <line x1="128" y1="95" x2="116" y2="107" stroke="#1a0a2e" stroke-width="4" stroke-linecap="round"/>
+        <line x1="86" y1="128" x2="114" y2="128" stroke="#1a0a2e" stroke-width="3" stroke-linecap="round"/>
+        <ellipse cx="70" cy="118" rx="12" ry="7" fill="#cc44aa" opacity="0.3"/>
+        <ellipse cx="130" cy="118" rx="12" ry="7" fill="#cc44aa" opacity="0.3"/>
+        <text x="92" y="82" font-size="12" fill="#6633aa">☆</text>
+      </svg>
+      <div class="meme-bottom-text" id="bottomText">me: i'll sleep early</div>
+    </div>
+
+    <!-- Mood selector -->
+    <div class="mood-selector">
+      <button class="mood-btn active" onclick="switchMood('dead')">dead inside</button>
+      <button class="mood-btn" onclick="switchMood('crying')">crying</button>
+      <button class="mood-btn" onclick="switchMood('unhinged')">unhinged</button>
+      <button class="mood-btn" onclick="switchMood('npc')">NPC</button>
+      <button class="mood-btn" onclick="switchMood('slay')">slay</button>
+      <button class="mood-btn" onclick="switchMood('brainrot')">brainrot</button>
+    </div>
+
+    <!-- Text inputs -->
+    <div class="meme-inputs">
+      <input type="text" id="topInput" placeholder="Top text (e.g. POV: it's 3am)" value="POV: it's 3am" oninput="updateMeme()"/>
+      <input type="text" id="bottomInput" placeholder="Bottom text (e.g. me: I'll sleep early)" value="me: i'll sleep early" oninput="updateMeme()"/>
+    </div>
+
+    <button class="dl-btn" onclick="copyMeme()">Copy Text Meme ↗</button>
+  </div>
+</div>
+
+<script>
+  function updateMeme() {
+    document.getElementById('topText').textContent = document.getElementById('topInput').value || '';
+    document.getElementById('bottomText').textContent = document.getElementById('bottomInput').value || '';
+  }
+
+  const moodFaces = {
+    dead: `<defs><radialGradient id="mbg" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#2a0a3a"/><stop offset="100%" stop-color="#0d0010"/></radialGradient><radialGradient id="mface" cx="50%" cy="45%" r="52%"><stop offset="0%" stop-color="#e8c8f8"/><stop offset="100%" stop-color="#c99ee8"/></radialGradient></defs><circle cx="100" cy="100" r="95" fill="url(#mbg)"/><circle cx="100" cy="108" r="72" fill="white"/><ellipse cx="100" cy="108" rx="60" ry="57" fill="url(#mface)" stroke="#1a0a2e" stroke-width="2.5"/><path d="M48 95 Q50 60 100 55 Q150 60 152 95" fill="#150820" stroke="#1a0a2e" stroke-width="2"/><line x1="72" y1="95" x2="84" y2="107" stroke="#1a0a2e" stroke-width="4" stroke-linecap="round"/><line x1="84" y1="95" x2="72" y2="107" stroke="#1a0a2e" stroke-width="4" stroke-linecap="round"/><line x1="116" y1="95" x2="128" y2="107" stroke="#1a0a2e" stroke-width="4" stroke-linecap="round"/><line x1="128" y1="95" x2="116" y2="107" stroke="#1a0a2e" stroke-width="4" stroke-linecap="round"/><line x1="86" y1="128" x2="114" y2="128" stroke="#1a0a2e" stroke-width="3" stroke-linecap="round"/><ellipse cx="70" cy="118" rx="12" ry="7" fill="#cc44aa" opacity="0.3"/><ellipse cx="130" cy="118" rx="12" ry="7" fill="#cc44aa" opacity="0.3"/><text x="92" y="82" font-size="12" fill="#6633aa">☆</text>`,
+    crying: `<defs><radialGradient id="mbg" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#0a1a3a"/><stop offset="100%" stop-color="#000d20"/></radialGradient><radialGradient id="mface" cx="50%" cy="45%" r="52%"><stop offset="0%" stop-color="#c8d8f8"/><stop offset="100%" stop-color="#9eaee8"/></radialGradient><radialGradient id="meye" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#44aaff"/><stop offset="100%" stop-color="#0044cc"/></radialGradient></defs><circle cx="100" cy="100" r="95" fill="url(#mbg)"/><circle cx="100" cy="108" r="72" fill="white"/><ellipse cx="100" cy="108" rx="60" ry="57" fill="url(#mface)" stroke="#0a1a3a" stroke-width="2.5"/><path d="M45 100 Q48 58 100 53 Q152 58 155 100" fill="#101830" stroke="#0a1a3a" stroke-width="2"/><ellipse cx="78" cy="103" rx="14" ry="15" fill="#0d0020" stroke="#0a1a3a" stroke-width="2"/><ellipse cx="78" cy="103" rx="10" ry="11" fill="url(#meye)"/><ellipse cx="78" cy="103" rx="5" ry="6" fill="#001433"/><circle cx="83" cy="98" r="3" fill="white" opacity="0.9"/><ellipse cx="122" cy="103" rx="14" ry="15" fill="#0d0020" stroke="#0a1a3a" stroke-width="2"/><ellipse cx="122" cy="103" rx="10" ry="11" fill="url(#meye)"/><ellipse cx="122" cy="103" rx="5" ry="6" fill="#001433"/><circle cx="127" cy="98" r="3" fill="white" opacity="0.9"/><path d="M74 116 Q72 128 70 138 Q68 145 72 148" fill="none" stroke="#44aaff" stroke-width="3" stroke-linecap="round" opacity="0.8"/><path d="M126 116 Q128 128 130 138 Q132 145 128 148" fill="none" stroke="#44aaff" stroke-width="3" stroke-linecap="round" opacity="0.8"/><ellipse cx="71" cy="150" rx="4" ry="5" fill="#44aaff" opacity="0.7"/><ellipse cx="129" cy="150" rx="4" ry="5" fill="#44aaff" opacity="0.7"/><path d="M85 128 Q93 122 100 123 Q107 122 115 128" fill="none" stroke="#0a1a3a" stroke-width="2.5" stroke-linecap="round"/>`,
+    unhinged: `<defs><radialGradient id="mbg" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#3a0a0a"/><stop offset="100%" stop-color="#100000"/></radialGradient><radialGradient id="mface" cx="50%" cy="45%" r="52%"><stop offset="0%" stop-color="#f8c8c8"/><stop offset="100%" stop-color="#e89e9e"/></radialGradient><radialGradient id="meye3" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#ff3333"/><stop offset="100%" stop-color="#880000"/></radialGradient></defs><circle cx="100" cy="100" r="95" fill="url(#mbg)"/><circle cx="100" cy="108" r="72" fill="white"/><ellipse cx="100" cy="108" rx="60" ry="57" fill="url(#mface)" stroke="#1a0a0a" stroke-width="2.5"/><path d="M42 100 Q35 55 65 45 Q85 35 100 38 Q115 35 135 45 Q165 55 158 100" fill="#1a0505" stroke="#1a0a0a" stroke-width="2"/><ellipse cx="78" cy="102" rx="13" ry="14" fill="#0d0000" stroke="#1a0a0a" stroke-width="2"/><ellipse cx="78" cy="102" rx="10" ry="11" fill="url(#meye3)"/><path d="M78 96 Q84 99 81 104 Q77 109 73 105 Q70 100 74 97 Q78 94 81 97" fill="none" stroke="#200000" stroke-width="1.5"/><circle cx="83" cy="97" r="3" fill="white" opacity="0.9"/><ellipse cx="122" cy="102" rx="13" ry="14" fill="#0d0000" stroke="#1a0a0a" stroke-width="2"/><ellipse cx="122" cy="102" rx="10" ry="11" fill="url(#meye3)"/><path d="M122 96 Q128 99 125 104 Q121 109 117 105 Q114 100 118 97 Q122 94 125 97" fill="none" stroke="#200000" stroke-width="1.5"/><circle cx="127" cy="97" r="3" fill="white" opacity="0.9"/><path d="M75 124 Q100 140 125 124" fill="#1a0505"/><path d="M80 124 L80 134 L88 127 L96 134 L100 127 L104 134 L112 127 L120 134 L120 124" fill="white" stroke="#1a0505" stroke-width="1"/>`,
+    npc: `<defs><radialGradient id="mbg" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#0a2a0a"/><stop offset="100%" stop-color="#000d00"/></radialGradient><radialGradient id="mface" cx="50%" cy="45%" r="52%"><stop offset="0%" stop-color="#c8f8cc"/><stop offset="100%" stop-color="#9ee8a2"/></radialGradient></defs><circle cx="100" cy="100" r="95" fill="url(#mbg)"/><circle cx="100" cy="108" r="72" fill="white"/><ellipse cx="100" cy="108" rx="60" ry="57" fill="url(#mface)" stroke="#0a1a0a" stroke-width="2.5"/><rect x="40" y="55" width="120" height="45" rx="4" fill="#0a1a0a"/><rect x="44" y="59" width="112" height="37" rx="2" fill="#112211"/><rect x="65" y="90" width="28" height="28" rx="3" fill="#0a1a0a"/><rect x="68" y="93" width="22" height="22" fill="#00ff44"/><rect x="74" y="99" width="10" height="10" fill="#003311"/><rect x="107" y="90" width="28" height="28" rx="3" fill="#0a1a0a"/><rect x="110" y="93" width="22" height="22" fill="#00ff44"/><rect x="116" y="99" width="10" height="10" fill="#003311"/><text x="82" y="133" font-size="14" fill="#0a1a0a" font-family="monospace">___</text><line x1="100" y1="55" x2="100" y2="30" stroke="#0a1a0a" stroke-width="3" stroke-linecap="round"/><circle cx="100" cy="26" r="6" fill="#00ff44"/>`,
+    slay: `<defs><radialGradient id="mbg" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#2a1a00"/><stop offset="100%" stop-color="#100800"/></radialGradient><radialGradient id="mface" cx="50%" cy="45%" r="52%"><stop offset="0%" stop-color="#f8e8c8"/><stop offset="100%" stop-color="#e8c89e"/></radialGradient><radialGradient id="meye5" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#ffaa00"/><stop offset="100%" stop-color="#cc5500"/></radialGradient></defs><circle cx="100" cy="100" r="95" fill="url(#mbg)"/><circle cx="100" cy="108" r="72" fill="white"/><ellipse cx="100" cy="108" rx="60" ry="57" fill="url(#mface)" stroke="#1a0800" stroke-width="2.5"/><path d="M65 68 L65 50 L80 62 L100 45 L120 62 L135 50 L135 68 Z" fill="#ffaa00" stroke="#cc7700" stroke-width="2"/><circle cx="100" cy="48" r="5" fill="#ff5500"/><path d="M44 103 Q46 70 100 65 Q154 70 156 103" fill="#1a0800" stroke="#1a0800" stroke-width="2"/><ellipse cx="78" cy="103" rx="14" ry="13" fill="#0d0000" stroke="#1a0800" stroke-width="2"/><ellipse cx="78" cy="103" rx="10" ry="10" fill="url(#meye5)"/><ellipse cx="78" cy="103" rx="5" ry="5" fill="#110500"/><path d="M64 96 Q78 92 92 96" fill="#1a0800"/><circle cx="82" cy="99" r="3" fill="white" opacity="0.9"/><ellipse cx="122" cy="103" rx="14" ry="13" fill="#0d0000" stroke="#1a0800" stroke-width="2"/><ellipse cx="122" cy="103" rx="10" ry="10" fill="url(#meye5)"/><ellipse cx="122" cy="103" rx="5" ry="5" fill="#110500"/><path d="M108 96 Q122 92 136 96" fill="#1a0800"/><circle cx="126" cy="99" r="3" fill="white" opacity="0.9"/><path d="M90 124 Q100 132 116 126" fill="none" stroke="#1a0800" stroke-width="3" stroke-linecap="round"/><text x="30" y="70" font-size="16" fill="#ffaa00" opacity="0.8">✦</text><text x="152" y="65" font-size="12" fill="#ffaa00" opacity="0.8">✦</text>`,
+    brainrot: `<defs><radialGradient id="mbg" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#1a0a2e"/><stop offset="100%" stop-color="#0d0010"/></radialGradient><radialGradient id="mface" cx="50%" cy="45%" r="52%"><stop offset="0%" stop-color="#e8c8f8"/><stop offset="100%" stop-color="#c99ee8"/></radialGradient><radialGradient id="meye6" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#ff3cf0"/><stop offset="100%" stop-color="#8800cc"/></radialGradient></defs><circle cx="100" cy="100" r="95" fill="url(#mbg)"/><circle cx="100" cy="108" r="72" fill="white"/><ellipse cx="100" cy="108" rx="60" ry="57" fill="url(#mface)" stroke="#1a0a2e" stroke-width="2.5"/><path d="M44 100 Q46 62 100 57 Q154 62 156 100" fill="#150820" stroke="#1a0a2e" stroke-width="2"/><path d="M100 57 Q96 30 106 18 Q112 30 104 57" fill="#150820" stroke="#1a0a2e" stroke-width="1.5"/><ellipse cx="78" cy="103" rx="14" ry="15" fill="#0d0010" stroke="#1a0a2e" stroke-width="2"/><ellipse cx="78" cy="103" rx="11" ry="12" fill="url(#meye6)"/><path d="M78 96 Q86 100 82 106 Q77 112 71 107 Q67 101 72 97 Q77 93 83 97" fill="none" stroke="#200030" stroke-width="2"/><circle cx="84" cy="97" r="3" fill="white" opacity="0.9"/><ellipse cx="122" cy="103" rx="14" ry="15" fill="#0d0010" stroke="#1a0a2e" stroke-width="2"/><ellipse cx="122" cy="103" rx="11" ry="12" fill="url(#meye6)"/><path d="M122 96 Q130 100 126 106 Q121 112 115 107 Q111 101 116 97 Q121 93 127 97" fill="none" stroke="#200030" stroke-width="2"/><circle cx="128" cy="97" r="3" fill="white" opacity="0.9"/><text x="56" y="122" font-size="13">💀</text><text x="122" y="122" font-size="13">💀</text><ellipse cx="100" cy="130" rx="12" ry="8" fill="#1a0a2e"/>`
+  };
+
+  function switchMood(mood) {
+    document.querySelectorAll('.mood-btn').forEach(b => b.classList.remove('active'));
+    event.target.classList.add('active');
+    document.getElementById('memeFace').innerHTML = moodFaces[mood];
+  }
+
+  function copyMeme() {
+    const top = document.getElementById('topInput').value;
+    const bottom = document.getElementById('bottomInput').value;
+    const text = `${top}\n\n[dark kawaii sticker]\n\n${bottom}`;
+    navigator.clipboard.writeText(text).then(() => {
+      const btn = document.querySelector('.dl-btn');
+      btn.textContent = 'Copied! 💀';
+      setTimeout(() => btn.textContent = 'Copy Text Meme ↗', 2000);
+    });
+  }
+
+  // floating sparkles
+  const symbols = ['✦', '★', '☆', '✧', '⋆'];
+  setInterval(() => {
+    const s = document.createElement('div');
+    s.className = 'sparkle';
+    s.textContent = symbols[Math.floor(Math.random() * symbols.length)];
+    s.style.left = Math.random() * 100 + 'vw';
+    s.style.bottom = '0';
+    s.style.color = ['#cc44ff','#ff44cc','#9933ff'][Math.floor(Math.random()*3)];
+    s.style.animationDelay = Math.random() * 2 + 's';
+    s.style.fontSize = (8 + Math.random() * 10) + 'px';
+    document.body.appendChild(s);
+    setTimeout(() => s.remove(), 4500);
+  }, 600);
+</script>
+</body>
+</html>
