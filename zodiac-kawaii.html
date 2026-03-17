@@ -1,0 +1,774 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Dark Kawaii Zodiac</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet"/>
+<style>
+  :root {
+    --bg: #060008;
+    --purple: #9933ff;
+    --pink: #ff44cc;
+    --lavender: #c99ee8;
+    --dark: #1a0a2e;
+    --glow: #cc44ff;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    background: var(--bg);
+    font-family: 'Space Mono', monospace;
+    color: white;
+    min-height: 100vh;
+    overflow-x: hidden;
+    cursor: default;
+  }
+  body::after {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background: radial-gradient(ellipse at 20% 50%, #1a003344 0%, transparent 60%),
+                radial-gradient(ellipse at 80% 20%, #00003344 0%, transparent 60%);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  header {
+    text-align: center;
+    padding: 3rem 1rem 1rem;
+    position: relative;
+    z-index: 1;
+  }
+  header h1 {
+    font-family: 'Syne', sans-serif;
+    font-size: clamp(2rem, 7vw, 4.5rem);
+    font-weight: 800;
+    background: linear-gradient(135deg, #ff44cc, #cc44ff, #6644ff);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    text-transform: uppercase;
+    letter-spacing: -1px;
+  }
+  header p {
+    color: #5533aa;
+    font-size: 0.7rem;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    margin-top: 0.4rem;
+  }
+
+  .divider {
+    width: 100%;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, #3d1a5a, transparent);
+    margin: 1.5rem 0;
+  }
+
+  /* Sign picker */
+  .picker {
+    text-align: center;
+    padding: 0 1rem 2rem;
+    position: relative;
+    z-index: 1;
+  }
+  .picker p {
+    font-size: 0.65rem;
+    color: #6633aa;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    margin-bottom: 1rem;
+  }
+  .signs-grid {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 0.5rem;
+    max-width: 700px;
+    margin: 0 auto;
+  }
+  .sign-btn {
+    background: #0f0018;
+    border: 1px solid #2d1a4a;
+    border-radius: 30px;
+    color: #7755aa;
+    font-family: 'Space Mono', monospace;
+    font-size: 0.65rem;
+    padding: 0.45rem 0.9rem;
+    cursor: pointer;
+    transition: all 0.2s;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+  .sign-btn:hover { background: #1a0a2e; border-color: var(--purple); color: var(--lavender); }
+  .sign-btn.active { background: #2d1a4a; border-color: var(--pink); color: white; box-shadow: 0 0 12px #ff44cc44; }
+
+  /* Card display */
+  .card-area {
+    max-width: 500px;
+    margin: 0 auto 3rem;
+    padding: 0 1.5rem;
+    position: relative;
+    z-index: 1;
+  }
+
+  .zodiac-card {
+    background: #0a0015;
+    border: 1px solid #2d1a4a;
+    border-radius: 20px;
+    padding: 2rem;
+    text-align: center;
+    transition: all 0.4s ease;
+    animation: fadeIn 0.4s ease;
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .zodiac-card svg {
+    width: 180px;
+    height: 180px;
+    margin: 0 auto 1.5rem;
+    display: block;
+    filter: drop-shadow(0 0 16px #cc44ff66);
+    animation: pulse 3s ease-in-out infinite;
+  }
+  @keyframes pulse {
+    0%, 100% { filter: drop-shadow(0 0 10px #cc44ff44); }
+    50% { filter: drop-shadow(0 0 24px #cc44ffaa); }
+  }
+
+  .sign-symbol {
+    font-size: 2.5rem;
+    margin-bottom: 0.5rem;
+    display: block;
+  }
+  .sign-name {
+    font-family: 'Syne', sans-serif;
+    font-size: 2rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    margin-bottom: 0.25rem;
+  }
+  .sign-dates {
+    font-size: 0.65rem;
+    color: #5533aa;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    margin-bottom: 1.5rem;
+  }
+
+  .divider-card {
+    height: 1px;
+    background: linear-gradient(90deg, transparent, #3d1a5a, transparent);
+    margin: 1.25rem 0;
+  }
+
+  .vibe-tag {
+    display: inline-block;
+    background: #1a0a2e;
+    border: 1px solid #3d1a5a;
+    border-radius: 20px;
+    padding: 0.3rem 0.8rem;
+    font-size: 0.6rem;
+    color: var(--pink);
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    margin: 0.25rem;
+  }
+
+  .horoscope-text {
+    font-size: 0.78rem;
+    color: #9977bb;
+    line-height: 1.9;
+    margin: 1.25rem 0;
+    text-align: left;
+    border-left: 2px solid #3d1a5a;
+    padding-left: 1rem;
+  }
+
+  .power-move {
+    background: #150020;
+    border: 1px solid #4a1a6e;
+    border-radius: 12px;
+    padding: 1rem;
+    margin-top: 1rem;
+  }
+  .power-move p:first-child {
+    font-size: 0.6rem;
+    color: #6633aa;
+    text-transform: uppercase;
+    letter-spacing: 3px;
+    margin-bottom: 0.4rem;
+  }
+  .power-move p:last-child {
+    font-size: 0.8rem;
+    color: var(--lavender);
+    font-weight: 700;
+  }
+
+  .share-text {
+    margin-top: 1.5rem;
+    background: #0f0018;
+    border: 1px solid #2d1a4a;
+    border-radius: 10px;
+    padding: 1rem;
+    font-size: 0.7rem;
+    color: #7755aa;
+    text-align: left;
+    line-height: 1.7;
+  }
+  .share-text span { color: var(--pink); }
+
+  .copy-btn {
+    width: 100%;
+    margin-top: 0.75rem;
+    background: linear-gradient(135deg, #6600cc, #cc0088);
+    border: none;
+    border-radius: 10px;
+    color: white;
+    font-family: 'Syne', sans-serif;
+    font-weight: 700;
+    font-size: 0.75rem;
+    padding: 0.75rem;
+    cursor: pointer;
+    text-transform: uppercase;
+    letter-spacing: 3px;
+    transition: all 0.2s;
+  }
+  .copy-btn:hover { transform: translateY(-2px); box-shadow: 0 0 20px #9933ff66; }
+
+  .empty-state {
+    text-align: center;
+    padding: 3rem 1rem;
+    color: #3d1a5a;
+  }
+  .empty-state p:first-child { font-size: 2rem; margin-bottom: 0.5rem; }
+  .empty-state p:last-child { font-size: 0.7rem; letter-spacing: 3px; text-transform: uppercase; }
+
+  /* floating stars */
+  .star {
+    position: fixed;
+    pointer-events: none;
+    animation: twinkle 3s ease-in-out infinite;
+    opacity: 0.3;
+    z-index: 0;
+  }
+  @keyframes twinkle {
+    0%, 100% { opacity: 0.1; transform: scale(0.8); }
+    50% { opacity: 0.5; transform: scale(1.2); }
+  }
+</style>
+</head>
+<body>
+
+<!-- Fixed stars -->
+<div class="star" style="top:8%;left:5%;font-size:10px;animation-delay:0s;">✦</div>
+<div class="star" style="top:15%;right:8%;font-size:8px;animation-delay:1s;">★</div>
+<div class="star" style="top:40%;left:3%;font-size:6px;animation-delay:2s;">✧</div>
+<div class="star" style="top:60%;right:5%;font-size:10px;animation-delay:0.5s;">✦</div>
+<div class="star" style="top:80%;left:8%;font-size:8px;animation-delay:1.5s;">★</div>
+<div class="star" style="top:25%;right:3%;font-size:6px;animation-delay:2.5s;">✧</div>
+
+<header>
+  <h1>☽ Dark Kawaii Zodiac ☾</h1>
+  <p>12 signs · cursed edition · 2026</p>
+</header>
+
+<div class="divider"></div>
+
+<div class="picker">
+  <p>pick your sign</p>
+  <div class="signs-grid" id="signsGrid"></div>
+</div>
+
+<div class="card-area">
+  <div class="zodiac-card" id="zodiacCard">
+    <div class="empty-state">
+      <p>☽</p>
+      <p>choose your sign above</p>
+    </div>
+  </div>
+</div>
+
+<script>
+const signs = [
+  {
+    name: "Aries", symbol: "♈", dates: "Mar 21 – Apr 19", element: "Fire",
+    color: "#ff3333", bg: "#3a0000",
+    vibes: ["main character", "rage quit", "that girl"],
+    horoscope: "You woke up and chose violence today — and honestly? Slay. Mercury is making you say things that live rent-free in everyone's head. Your chaotic energy is actually your superpower this week. Stop apologizing for existing loudly.",
+    powerMove: "Send the text. You've been drafting it for 3 days.",
+    shareCaption: "aries szn is literally just controlled chaos 🔥♈ tag ur aries friend who needs to hear this"
+  },
+  {
+    name: "Taurus", symbol: "♉", dates: "Apr 20 – May 20", element: "Earth",
+    color: "#44bb44", bg: "#003300",
+    vibes: ["unbothered", "soft life", "stay home"],
+    horoscope: "The universe is asking you to move. You said no. Honestly fair. Your comfort zone is so cozy it should be illegal. But Venus is whispering that one small change could unlock your whole new era. Still no rush tho.",
+    powerMove: "Treat yourself. You've been 'adulting' too hard.",
+    shareCaption: "taurus energy is just saying no to everything and thriving ♉🌿 tag ur taurus"
+  },
+  {
+    name: "Gemini", symbol: "♊", dates: "May 21 – Jun 20", element: "Air",
+    color: "#ffee00", bg: "#2a2a00",
+    vibes: ["two-faced queen", "brainrot", "main character"],
+    horoscope: "You have 47 tabs open in your brain and honestly that's your aesthetic. People call you unpredictable. You call it keeping them on their toes. Your duality is not a flaw — it's your entire personality arc.",
+    powerMove: "Pick ONE thing and finish it. Just one.",
+    shareCaption: "gemini szn is having 4 different personalities before noon ♊💛 tag ur gemini"
+  },
+  {
+    name: "Cancer", symbol: "♋", dates: "Jun 21 – Jul 22", element: "Water",
+    color: "#aaddff", bg: "#001a2a",
+    vibes: ["cry later", "soft hours", "emotionally unavailable"],
+    horoscope: "You've been holding everyone else's feelings while yours are rotting in a corner. The moon sees you. This week is for ugly crying and healing and eating snacks at 2am. You don't need to be okay right now.",
+    powerMove: "Block them. You know who.",
+    shareCaption: "cancer energy is caring too much and then going offline for a week ♋🌊 tag ur cancer"
+  },
+  {
+    name: "Leo", symbol: "♌", dates: "Jul 23 – Aug 22", element: "Fire",
+    color: "#ffaa00", bg: "#2a1500",
+    vibes: ["slay mode", "attention required", "iconic"],
+    horoscope: "The sun is literally in your corner and you already knew that. This week you walk into every room like the main character because you are. Anyone not clapping is just not in your target audience.",
+    powerMove: "Post that selfie. The one you've been sitting on.",
+    shareCaption: "leo szn is being delusional about yourself in the best way ♌👑 tag ur leo"
+  },
+  {
+    name: "Virgo", symbol: "♍", dates: "Aug 23 – Sep 22", element: "Earth",
+    color: "#99dd77", bg: "#0a1a00",
+    vibes: ["overthinker", "perfectionist", "unhinged lists"],
+    horoscope: "You rewrote that message 11 times and still sent 'k'. Your brain is a spreadsheet and everyone else is a mess you're slowly organizing. Mercury loves your chaos-in-disguise energy but please — eat something and sleep.",
+    powerMove: "Done is better than perfect. Ship it.",
+    shareCaption: "virgo energy is fixing everyone's problems while silently falling apart ♍📋 tag ur virgo"
+  },
+  {
+    name: "Libra", symbol: "♎", dates: "Sep 23 – Oct 22", element: "Air",
+    color: "#ffaadd", bg: "#2a0015",
+    vibes: ["indecisive queen", "aesthetic era", "people pleaser"],
+    horoscope: "You've been trying to make everyone happy and your own happiness has been on read for weeks. Venus wants you to choose yourself for once. Your indecision is just you caring too much about everything — it's actually kinda beautiful.",
+    powerMove: "Make a decision without asking anyone's opinion.",
+    shareCaption: "libra szn is spending 3 hours deciding where to eat ♎⚖️ tag ur libra"
+  },
+  {
+    name: "Scorpio", symbol: "♏", dates: "Oct 23 – Nov 21", element: "Water",
+    color: "#cc0044", bg: "#1a0008",
+    vibes: ["mysterious", "unhinged era", "villain arc"],
+    horoscope: "You already know everyone's secrets and you haven't said a word. That's power. Pluto is intensifying your already intense energy — things are about to transform. You were built for this dark era.",
+    powerMove: "Let go of the grudge. Keep the lesson.",
+    shareCaption: "scorpio energy is knowing everything and saying nothing 🦂♏ tag ur scorpio"
+  },
+  {
+    name: "Sagittarius", symbol: "♐", dates: "Nov 22 – Dec 21", element: "Fire",
+    color: "#ff7700", bg: "#2a0e00",
+    vibes: ["escape artist", "chaotic free spirit", "npc irl"],
+    horoscope: "You have booked three trips you cannot afford and you feel amazing about it. Jupiter is expanding your delusion — which is honestly your greatest gift. Reality is just a setting you haven't turned off yet.",
+    powerMove: "Make the spontaneous plan. Don't overthink it.",
+    shareCaption: "sagittarius energy is leaving the country when things get hard ♐🏹 tag ur sag"
+  },
+  {
+    name: "Capricorn", symbol: "♑", dates: "Dec 22 – Jan 19", element: "Earth",
+    color: "#888888", bg: "#0a0a0a",
+    vibes: ["CEO mode", "no days off", "emotionally unavailable"],
+    horoscope: "You have been in grind mode since birth. Saturn respects the hustle but even machines need maintenance. This week your biggest power move is actually resting — shocking concept, try it.",
+    powerMove: "Log off. Actually close the laptop.",
+    shareCaption: "capricorn energy is working during vacation and calling it self care ♑🪐 tag ur cap"
+  },
+  {
+    name: "Aquarius", symbol: "♒", dates: "Jan 20 – Feb 18", element: "Air",
+    color: "#44ccff", bg: "#001a2a",
+    vibes: ["alien energy", "ahead of their time", "NPC behavior"],
+    horoscope: "You are simply built different and everyone can feel it. Uranus is confirming what you already knew — you're not weird, you're just early. The world will catch up eventually. Maybe.",
+    powerMove: "Share the weird idea. It's actually genius.",
+    shareCaption: "aquarius energy is being 10 years ahead of everyone and being misunderstood for it ♒🛸 tag ur aquarius"
+  },
+  {
+    name: "Pisces", symbol: "♓", dates: "Feb 19 – Mar 20", element: "Water",
+    color: "#aa88ff", bg: "#0a0022",
+    vibes: ["dreamcore", "dissociating", "main character in their head"],
+    horoscope: "You have been living in a daydream and honestly the vibes are immaculate. Neptune has you seeing things others can't. Your sensitivity is not a weakness — it's your entire superpower. Stay soft in a hard world.",
+    powerMove: "Turn the daydream into something real.",
+    shareCaption: "pisces energy is crying at a song then forgetting why ♓🌊 tag ur pisces"
+  }
+];
+
+// Draw faces per sign
+function drawFace(sign) {
+  const c = sign.color;
+  const bg = sign.bg;
+
+  const faces = {
+    "Aries": `
+      <circle cx="100" cy="100" r="95" fill="${bg}"/>
+      <circle cx="100" cy="108" r="72" fill="white"/>
+      <ellipse cx="100" cy="108" rx="60" ry="57" fill="#f8c8c8" stroke="#1a0a0a" stroke-width="2.5"/>
+      <path d="M44 100 Q35 55 65 45 Q85 35 100 38 Q115 35 135 45 Q165 55 156 100" fill="#1a0505" stroke="#1a0a0a" stroke-width="2"/>
+      <path d="M70 55 Q60 35 72 22" fill="none" stroke="#1a0505" stroke-width="6" stroke-linecap="round"/>
+      <path d="M130 55 Q140 35 128 22" fill="none" stroke="#1a0505" stroke-width="6" stroke-linecap="round"/>
+      <!-- ram horns -->
+      <path d="M55 80 Q35 65 42 48 Q55 38 62 55" fill="${c}" stroke="#1a0a0a" stroke-width="2"/>
+      <path d="M145 80 Q165 65 158 48 Q145 38 138 55" fill="${c}" stroke="#1a0a0a" stroke-width="2"/>
+      <!-- angry eyes -->
+      <ellipse cx="78" cy="100" rx="14" ry="13" fill="#0d0000" stroke="#1a0a0a" stroke-width="2"/>
+      <ellipse cx="78" cy="100" rx="10" ry="9" fill="${c}"/>
+      <ellipse cx="78" cy="100" rx="5" ry="5" fill="#110000"/>
+      <circle cx="83" cy="96" r="3" fill="white" opacity="0.9"/>
+      <path d="M64 92 Q78 88 92 93" fill="#1a0a0a"/>
+      <ellipse cx="122" cy="100" rx="14" ry="13" fill="#0d0000" stroke="#1a0a0a" stroke-width="2"/>
+      <ellipse cx="122" cy="100" rx="10" ry="9" fill="${c}"/>
+      <ellipse cx="122" cy="100" rx="5" ry="5" fill="#110000"/>
+      <circle cx="127" cy="96" r="3" fill="white" opacity="0.9"/>
+      <path d="M108 92 Q122 88 136 93" fill="#1a0a0a"/>
+      <!-- smirk -->
+      <path d="M88 124 Q100 134 118 126" fill="none" stroke="#1a0a0a" stroke-width="3" stroke-linecap="round"/>
+      <path d="M115 126 L118 118" stroke="#1a0a0a" stroke-width="2" stroke-linecap="round"/>
+    `,
+    "Taurus": `
+      <circle cx="100" cy="100" r="95" fill="${bg}"/>
+      <circle cx="100" cy="108" r="72" fill="white"/>
+      <ellipse cx="100" cy="108" rx="60" ry="57" fill="#c8f8cc" stroke="#0a1a0a" stroke-width="2.5"/>
+      <path d="M44 100 Q48 62 100 57 Q152 62 156 100" fill="#101830" stroke="#0a1a0a" stroke-width="2"/>
+      <!-- flower crown -->
+      <circle cx="72" cy="62" r="8" fill="${c}" stroke="#0a1a0a" stroke-width="1.5"/>
+      <circle cx="88" cy="55" r="7" fill="#ffaacc" stroke="#0a1a0a" stroke-width="1.5"/>
+      <circle cx="100" cy="52" r="8" fill="${c}" stroke="#0a1a0a" stroke-width="1.5"/>
+      <circle cx="112" cy="55" r="7" fill="#ffaacc" stroke="#0a1a0a" stroke-width="1.5"/>
+      <circle cx="128" cy="62" r="8" fill="${c}" stroke="#0a1a0a" stroke-width="1.5"/>
+      <!-- bull horns -->
+      <path d="M55 78 Q42 58 50 44 Q62 50 62 68" fill="#0a1a0a"/>
+      <path d="M145 78 Q158 58 150 44 Q138 50 138 68" fill="#0a1a0a"/>
+      <!-- sleepy half eyes -->
+      <ellipse cx="78" cy="103" rx="14" ry="10" fill="#0d0010" stroke="#0a1a0a" stroke-width="2"/>
+      <ellipse cx="78" cy="105" rx="10" ry="7" fill="${c}"/>
+      <ellipse cx="78" cy="106" rx="5" ry="4" fill="#001100"/>
+      <path d="M64 96 Q78 93 92 96" fill="#0a1a0a"/>
+      <circle cx="83" cy="100" r="2.5" fill="white" opacity="0.9"/>
+      <ellipse cx="122" cy="103" rx="14" ry="10" fill="#0d0010" stroke="#0a1a0a" stroke-width="2"/>
+      <ellipse cx="122" cy="105" rx="10" ry="7" fill="${c}"/>
+      <ellipse cx="122" cy="106" rx="5" ry="4" fill="#001100"/>
+      <path d="M108 96 Q122 93 136 96" fill="#0a1a0a"/>
+      <circle cx="127" cy="100" r="2.5" fill="white" opacity="0.9"/>
+      <!-- content smile -->
+      <path d="M85 126 Q100 136 115 126" fill="none" stroke="#0a1a0a" stroke-width="3" stroke-linecap="round"/>
+      <ellipse cx="68" cy="116" rx="12" ry="7" fill="#44bb44" opacity="0.25"/>
+      <ellipse cx="132" cy="116" rx="12" ry="7" fill="#44bb44" opacity="0.25"/>
+    `,
+    "Gemini": `
+      <circle cx="100" cy="100" r="95" fill="${bg}"/>
+      <circle cx="100" cy="108" r="72" fill="white"/>
+      <ellipse cx="100" cy="108" rx="60" ry="57" fill="#f8f8c8" stroke="#1a1a0a" stroke-width="2.5"/>
+      <path d="M44 98 Q46 60 100 55 Q154 60 156 98" fill="#1a1a05" stroke="#1a1a0a" stroke-width="2"/>
+      <!-- split hair two sides -->
+      <path d="M44 98 Q48 70 72 60" fill="none" stroke="#1a1a05" stroke-width="8" stroke-linecap="round"/>
+      <path d="M156 98 Q152 70 128 60" fill="none" stroke="#1a1a05" stroke-width="8" stroke-linecap="round"/>
+      <!-- one winking eye, one normal -->
+      <ellipse cx="78" cy="102" rx="14" ry="14" fill="#0d0d00" stroke="#1a1a0a" stroke-width="2"/>
+      <ellipse cx="78" cy="102" rx="10" ry="10" fill="${c}"/>
+      <ellipse cx="78" cy="102" rx="5" ry="5" fill="#111100"/>
+      <circle cx="83" cy="97" r="3" fill="white" opacity="0.9"/>
+      <!-- wink -->
+      <path d="M108 102 Q122 96 136 102" fill="none" stroke="#1a1a0a" stroke-width="4" stroke-linecap="round"/>
+      <!-- two mouths expressions -->
+      <path d="M82 124 Q91 130 100 124" fill="none" stroke="#1a1a0a" stroke-width="2.5" stroke-linecap="round"/>
+      <path d="M100 128 Q109 122 118 128" fill="none" stroke="#1a1a0a" stroke-width="2.5" stroke-linecap="round"/>
+      <!-- roman II on forehead -->
+      <text x="90" y="80" font-size="14" fill="#cccc00" font-family="monospace" font-weight="bold">II</text>
+      <ellipse cx="68" cy="116" rx="12" ry="7" fill="${c}" opacity="0.2"/>
+      <ellipse cx="132" cy="116" rx="12" ry="7" fill="${c}" opacity="0.2"/>
+    `,
+    "Cancer": `
+      <circle cx="100" cy="100" r="95" fill="${bg}"/>
+      <circle cx="100" cy="108" r="72" fill="white"/>
+      <ellipse cx="100" cy="108" rx="60" ry="57" fill="#c8e8f8" stroke="#0a0a1a" stroke-width="2.5"/>
+      <path d="M45 102 Q48 62 100 57 Q152 62 155 102" fill="#101820" stroke="#0a0a1a" stroke-width="2"/>
+      <!-- moon on forehead -->
+      <path d="M90 72 Q100 60 110 72 Q100 68 90 72" fill="#aaddff" stroke="#0a0a1a" stroke-width="1.5"/>
+      <!-- teary big eyes -->
+      <ellipse cx="78" cy="103" rx="15" ry="16" fill="#0d0010" stroke="#0a0a1a" stroke-width="2"/>
+      <ellipse cx="78" cy="103" rx="11" ry="12" fill="${c}"/>
+      <ellipse cx="78" cy="103" rx="5" ry="6" fill="#000a15"/>
+      <circle cx="84" cy="97" r="3.5" fill="white" opacity="0.9"/>
+      <path d="M72 118 Q70 130 68 140" fill="none" stroke="${c}" stroke-width="3" stroke-linecap="round" opacity="0.8"/>
+      <ellipse cx="67" cy="142" rx="4" ry="5" fill="${c}" opacity="0.7"/>
+      <ellipse cx="122" cy="103" rx="15" ry="16" fill="#0d0010" stroke="#0a0a1a" stroke-width="2"/>
+      <ellipse cx="122" cy="103" rx="11" ry="12" fill="${c}"/>
+      <ellipse cx="122" cy="103" rx="5" ry="6" fill="#000a15"/>
+      <circle cx="128" cy="97" r="3.5" fill="white" opacity="0.9"/>
+      <path d="M128 118 Q130 130 132 140" fill="none" stroke="${c}" stroke-width="3" stroke-linecap="round" opacity="0.8"/>
+      <ellipse cx="133" cy="142" rx="4" ry="5" fill="${c}" opacity="0.7"/>
+      <path d="M87 128 Q94 122 100 123 Q106 122 113 128" fill="none" stroke="#0a0a1a" stroke-width="2.5" stroke-linecap="round"/>
+      <ellipse cx="68" cy="116" rx="12" ry="7" fill="${c}" opacity="0.25"/>
+      <ellipse cx="132" cy="116" rx="12" ry="7" fill="${c}" opacity="0.25"/>
+    `,
+    "Leo": `
+      <circle cx="100" cy="100" r="95" fill="${bg}"/>
+      <!-- mane glow rings -->
+      <circle cx="100" cy="108" r="76" fill="none" stroke="${c}" stroke-width="2" opacity="0.3"/>
+      <circle cx="100" cy="108" r="72" fill="white"/>
+      <ellipse cx="100" cy="108" rx="60" ry="57" fill="#f8e8c8" stroke="#1a0800" stroke-width="2.5"/>
+      <!-- lion mane -->
+      <path d="M35 108 Q28 85 40 68 Q55 78 52 95" fill="${c}" stroke="#1a0800" stroke-width="1.5"/>
+      <path d="M165 108 Q172 85 160 68 Q145 78 148 95" fill="${c}" stroke="#1a0800" stroke-width="1.5"/>
+      <path d="M52 75 Q48 52 62 40 Q72 54 68 70" fill="${c}" stroke="#1a0800" stroke-width="1.5"/>
+      <path d="M148 75 Q152 52 138 40 Q128 54 132 70" fill="${c}" stroke="#1a0800" stroke-width="1.5"/>
+      <path d="M68 58 Q70 36 85 28 Q90 44 84 58" fill="${c}" stroke="#1a0800" stroke-width="1.5"/>
+      <path d="M132 58 Q130 36 115 28 Q110 44 116 58" fill="${c}" stroke="#1a0800" stroke-width="1.5"/>
+      <!-- crown -->
+      <path d="M72 65 L72 50 L84 60 L100 45 L116 60 L128 50 L128 65 Z" fill="${c}" stroke="#aa7700" stroke-width="2"/>
+      <circle cx="100" cy="48" r="5" fill="#ff5500"/>
+      <!-- confident eyes -->
+      <ellipse cx="78" cy="103" rx="14" ry="13" fill="#0d0000" stroke="#1a0800" stroke-width="2"/>
+      <ellipse cx="78" cy="103" rx="10" ry="10" fill="${c}"/>
+      <ellipse cx="78" cy="103" rx="5" ry="5" fill="#110500"/>
+      <path d="M64 95 Q78 91 92 95" fill="#1a0800"/>
+      <circle cx="83" cy="99" r="3" fill="white" opacity="0.9"/>
+      <ellipse cx="122" cy="103" rx="14" ry="13" fill="#0d0000" stroke="#1a0800" stroke-width="2"/>
+      <ellipse cx="122" cy="103" rx="10" ry="10" fill="${c}"/>
+      <ellipse cx="122" cy="103" rx="5" ry="5" fill="#110500"/>
+      <path d="M108 95 Q122 91 136 95" fill="#1a0800"/>
+      <circle cx="127" cy="99" r="3" fill="white" opacity="0.9"/>
+      <path d="M88 124 Q100 133 116 126" fill="none" stroke="#1a0800" stroke-width="3" stroke-linecap="round"/>
+      <ellipse cx="68" cy="116" rx="11" ry="7" fill="${c}" opacity="0.2"/>
+      <ellipse cx="132" cy="116" rx="11" ry="7" fill="${c}" opacity="0.2"/>
+    `,
+    "Virgo": `
+      <circle cx="100" cy="100" r="95" fill="${bg}"/>
+      <circle cx="100" cy="108" r="72" fill="white"/>
+      <ellipse cx="100" cy="108" rx="60" ry="57" fill="#e8f8c8" stroke="#0a1a0a" stroke-width="2.5"/>
+      <!-- neat straight hair -->
+      <rect x="44" y="55" width="112" height="50" rx="4" fill="#101810"/>
+      <rect x="40" y="55" width="8" height="70" rx="4" fill="#101810"/>
+      <rect x="152" y="55" width="8" height="70" rx="4" fill="#101810"/>
+      <!-- glasses -->
+      <rect x="60" y="93" width="34" height="24" rx="12" fill="none" stroke="${c}" stroke-width="2.5"/>
+      <rect x="106" y="93" width="34" height="24" rx="12" fill="none" stroke="${c}" stroke-width="2.5"/>
+      <line x1="94" y1="105" x2="106" y2="105" stroke="${c}" stroke-width="2"/>
+      <!-- analytical eyes -->
+      <ellipse cx="77" cy="105" rx="11" ry="10" fill="#0a0d00"/>
+      <ellipse cx="77" cy="105" rx="7" ry="7" fill="${c}"/>
+      <ellipse cx="77" cy="105" rx="3" ry="3" fill="#0a0f00"/>
+      <circle cx="81" cy="101" r="2.5" fill="white" opacity="0.9"/>
+      <ellipse cx="123" cy="105" rx="11" ry="10" fill="#0a0d00"/>
+      <ellipse cx="123" cy="105" rx="7" ry="7" fill="${c}"/>
+      <ellipse cx="123" cy="105" rx="3" ry="3" fill="#0a0f00"/>
+      <circle cx="127" cy="101" r="2.5" fill="white" opacity="0.9"/>
+      <!-- pursed lips -->
+      <path d="M88 126 Q100 130 112 126" fill="none" stroke="#0a1a0a" stroke-width="2.5" stroke-linecap="round"/>
+      <!-- clipboard badge -->
+      <circle cx="148" cy="148" r="14" fill="#0a1a0a" stroke="${c}" stroke-width="2"/>
+      <text x="141" y="153" font-size="11" fill="${c}" font-family="monospace">✓✓</text>
+    `,
+    "Libra": `
+      <circle cx="100" cy="100" r="95" fill="${bg}"/>
+      <circle cx="100" cy="108" r="72" fill="white"/>
+      <ellipse cx="100" cy="108" rx="60" ry="57" fill="#f8c8e8" stroke="#1a0010" stroke-width="2.5"/>
+      <!-- wavy aesthetic hair -->
+      <path d="M44 100 Q50 62 100 57 Q150 62 156 100" fill="#1a0515" stroke="#1a0010" stroke-width="2"/>
+      <path d="M58 68 Q50 48 58 34" fill="none" stroke="#1a0515" stroke-width="7" stroke-linecap="round"/>
+      <path d="M80 58 Q75 38 82 24" fill="none" stroke="#1a0515" stroke-width="6" stroke-linecap="round"/>
+      <path d="M120 58 Q125 38 118 24" fill="none" stroke="#1a0515" stroke-width="6" stroke-linecap="round"/>
+      <path d="M142 68 Q150 48 142 34" fill="none" stroke="#1a0515" stroke-width="7" stroke-linecap="round"/>
+      <!-- scales on forehead -->
+      <line x1="88" y1="76" x2="112" y2="76" stroke="${c}" stroke-width="2"/>
+      <line x1="100" y1="68" x2="100" y2="76" stroke="${c}" stroke-width="2"/>
+      <path d="M82 80 Q88 76 94 80" fill="none" stroke="${c}" stroke-width="1.5"/>
+      <path d="M106 80 Q112 76 118 80" fill="none" stroke="${c}" stroke-width="1.5"/>
+      <!-- soft eyes -->
+      <ellipse cx="78" cy="103" rx="14" ry="14" fill="#0d0010" stroke="#1a0010" stroke-width="2"/>
+      <ellipse cx="78" cy="103" rx="10" ry="10" fill="${c}"/>
+      <ellipse cx="78" cy="103" rx="5" ry="5" fill="#15000a"/>
+      <circle cx="83" cy="98" r="3" fill="white" opacity="0.9"/>
+      <ellipse cx="122" cy="103" rx="14" ry="14" fill="#0d0010" stroke="#1a0010" stroke-width="2"/>
+      <ellipse cx="122" cy="103" rx="10" ry="10" fill="${c}"/>
+      <ellipse cx="122" cy="103" rx="5" ry="5" fill="#15000a"/>
+      <circle cx="127" cy="98" r="3" fill="white" opacity="0.9"/>
+      <!-- sweet smile -->
+      <path d="M85 125 Q100 136 115 125" fill="none" stroke="#1a0010" stroke-width="3" stroke-linecap="round"/>
+      <ellipse cx="68" cy="116" rx="12" ry="7" fill="${c}" opacity="0.25"/>
+      <ellipse cx="132" cy="116" rx="12" ry="7" fill="${c}" opacity="0.25"/>
+    `,
+    "Scorpio": `
+      <circle cx="100" cy="100" r="95" fill="${bg}"/>
+      <circle cx="100" cy="108" r="72" fill="white"/>
+      <ellipse cx="100" cy="108" rx="60" ry="57" fill="#f8c8cc" stroke="#1a000a" stroke-width="2.5"/>
+      <path d="M42 100 Q35 55 62 42 Q82 32 100 35 Q118 32 138 42 Q165 55 158 100" fill="#1a0508" stroke="#1a000a" stroke-width="2"/>
+      <path d="M55 65 Q42 42 52 28" fill="none" stroke="#1a0508" stroke-width="7" stroke-linecap="round"/>
+      <path d="M78 45 Q72 22 80 10" fill="none" stroke="#1a0508" stroke-width="6" stroke-linecap="round"/>
+      <path d="M122 45 Q128 22 120 10" fill="none" stroke="#1a0508" stroke-width="6" stroke-linecap="round"/>
+      <path d="M145 65 Q158 42 148 28" fill="none" stroke="#1a0508" stroke-width="7" stroke-linecap="round"/>
+      <!-- scorpion stinger on forehead -->
+      <path d="M96 72 Q100 62 104 72 Q102 68 100 70 Q98 68 96 72" fill="${c}" stroke="#1a000a" stroke-width="1"/>
+      <!-- intense eyes -->
+      <ellipse cx="78" cy="103" rx="14" ry="14" fill="#0d0005" stroke="#1a000a" stroke-width="2"/>
+      <ellipse cx="78" cy="103" rx="10" ry="10" fill="${c}"/>
+      <ellipse cx="78" cy="103" rx="5" ry="5" fill="#10000a"/>
+      <circle cx="83" cy="98" r="3" fill="white" opacity="0.9"/>
+      <ellipse cx="122" cy="103" rx="14" ry="14" fill="#0d0005" stroke="#1a000a" stroke-width="2"/>
+      <ellipse cx="122" cy="103" rx="10" ry="10" fill="${c}"/>
+      <ellipse cx="122" cy="103" rx="5" ry="5" fill="#10000a"/>
+      <circle cx="127" cy="98" r="3" fill="white" opacity="0.9"/>
+      <!-- sharp smirk -->
+      <path d="M88 124 Q100 130 114 122" fill="none" stroke="#1a000a" stroke-width="3" stroke-linecap="round"/>
+      <!-- fangs -->
+      <path d="M95 124 L93 133 L99 126" fill="#f8c8cc" stroke="#1a000a" stroke-width="1.5" stroke-linejoin="round"/>
+      <path d="M105 124 L107 133 L101 126" fill="#f8c8cc" stroke="#1a000a" stroke-width="1.5" stroke-linejoin="round"/>
+      <ellipse cx="68" cy="116" rx="12" ry="7" fill="${c}" opacity="0.2"/>
+      <ellipse cx="132" cy="116" rx="12" ry="7" fill="${c}" opacity="0.2"/>
+    `,
+    "Sagittarius": `
+      <circle cx="100" cy="100" r="95" fill="${bg}"/>
+      <circle cx="100" cy="108" r="72" fill="white"/>
+      <ellipse cx="100" cy="108" rx="60" ry="57" fill="#f8e0c8" stroke="#1a0800" stroke-width="2.5"/>
+      <path d="M44 100 Q48 62 100 57 Q152 62 156 100" fill="#1a0e05" stroke="#1a0800" stroke-width="2"/>
+      <!-- adventure hat -->
+      <ellipse cx="100" cy="60" rx="50" ry="8" fill="#1a0e05" stroke="#1a0800" stroke-width="2"/>
+      <path d="M62 60 Q68 38 100 32 Q132 38 138 60" fill="#2a1a08" stroke="#1a0800" stroke-width="2"/>
+      <!-- arrow on hat -->
+      <line x1="72" y1="48" x2="128" y2="48" stroke="${c}" stroke-width="2"/>
+      <path d="M122 44 L128 48 L122 52" fill="${c}" stroke="${c}" stroke-width="1"/>
+      <!-- adventurous eyes -->
+      <ellipse cx="78" cy="103" rx="14" ry="13" fill="#0d0500" stroke="#1a0800" stroke-width="2"/>
+      <ellipse cx="78" cy="103" rx="10" ry="9" fill="${c}"/>
+      <ellipse cx="78" cy="103" rx="5" ry="5" fill="#0f0500"/>
+      <circle cx="83" cy="99" r="3" fill="white" opacity="0.9"/>
+      <ellipse cx="122" cy="103" rx="14" ry="13" fill="#0d0500" stroke="#1a0800" stroke-width="2"/>
+      <ellipse cx="122" cy="103" rx="10" ry="9" fill="${c}"/>
+      <ellipse cx="122" cy="103" rx="5" ry="5" fill="#0f0500"/>
+      <circle cx="127" cy="99" r="3" fill="white" opacity="0.9"/>
+      <!-- big grin -->
+      <path d="M80 123 Q100 140 120 123" fill="#1a0800"/>
+      <path d="M84 123 L84 132 L92 126 L100 132 L108 126 L116 132 L116 123" fill="white" stroke="#1a0800" stroke-width="1"/>
+      <ellipse cx="68" cy="115" rx="12" ry="7" fill="${c}" opacity="0.2"/>
+      <ellipse cx="132" cy="115" rx="12" ry="7" fill="${c}" opacity="0.2"/>
+    `,
+    "Capricorn": `
+      <circle cx="100" cy="100" r="95" fill="${bg}"/>
+      <circle cx="100" cy="108" r="72" fill="white"/>
+      <ellipse cx="100" cy="108" rx="60" ry="57" fill="#d8d8d8" stroke="#0a0a0a" stroke-width="2.5"/>
+      <!-- slicked back hair -->
+      <path d="M44 100 Q46 62 100 55 Q154 62 156 100" fill="#0a0a0a" stroke="#0a0a0a" stroke-width="2"/>
+      <!-- goat horns -->
+      <path d="M62 68 Q52 48 58 32 Q68 40 70 58" fill="#333333" stroke="#0a0a0a" stroke-width="2"/>
+      <path d="M138 68 Q148 48 142 32 Q132 40 130 58" fill="#333333" stroke="#0a0a0a" stroke-width="2"/>
+      <!-- businessman tie -->
+      <path d="M94 152 L100 170 L106 152 L103 158 L100 155 L97 158 Z" fill="#0a0a0a"/>
+      <!-- serious eyes with bags -->
+      <ellipse cx="78" cy="103" rx="14" ry="12" fill="#0d0d0d" stroke="#0a0a0a" stroke-width="2"/>
+      <ellipse cx="78" cy="103" rx="10" ry="8" fill="${c}"/>
+      <ellipse cx="78" cy="103" rx="5" ry="4" fill="#080808"/>
+      <circle cx="83" cy="99" r="3" fill="white" opacity="0.8"/>
+      <!-- eye bags -->
+      <path d="M64 112 Q78 116 92 112" fill="none" stroke="#888888" stroke-width="1.5" opacity="0.5"/>
+      <ellipse cx="122" cy="103" rx="14" ry="12" fill="#0d0d0d" stroke="#0a0a0a" stroke-width="2"/>
+      <ellipse cx="122" cy="103" rx="10" ry="8" fill="${c}"/>
+      <ellipse cx="122" cy="103" rx="5" ry="4" fill="#080808"/>
+      <circle cx="127" cy="99" r="3" fill="white" opacity="0.8"/>
+      <path d="M108 112 Q122 116 136 112" fill="none" stroke="#888888" stroke-width="1.5" opacity="0.5"/>
+      <!-- flat serious mouth -->
+      <line x1="85" y1="126" x2="115" y2="126" stroke="#0a0a0a" stroke-width="3" stroke-linecap="round"/>
+    `,
+    "Aquarius": `
+      <circle cx="100" cy="100" r="95" fill="${bg}"/>
+      <circle cx="100" cy="108" r="72" fill="white"/>
+      <ellipse cx="100" cy="108" rx="60" ry="57" fill="#c8e8f8" stroke="#000a1a" stroke-width="2.5"/>
+      <!-- alien antenna hair -->
+      <path d="M44 100 Q48 62 100 55 Q152 62 156 100" fill="#050a18" stroke="#000a1a" stroke-width="2"/>
+      <line x1="100" y1="55" x2="90" y2="28" stroke="#050a18" stroke-width="3" stroke-linecap="round"/>
+      <circle cx="88" cy="24" r="7" fill="${c}" opacity="0.9"/>
+      <line x1="100" y1="55" x2="110" y2="28" stroke="#050a18" stroke-width="3" stroke-linecap="round"/>
+      <circle cx="112" cy="24" r="5" fill="#ff44cc" opacity="0.9"/>
+      <!-- alien eyes -->
+      <ellipse cx="78" cy="100" rx="16" ry="18" fill="#0d0d1a" stroke="#000a1a" stroke-width="2"/>
+      <ellipse cx="78" cy="100" rx="12" ry="14" fill="${c}"/>
+      <ellipse cx="78" cy="100" rx="5" ry="6" fill="#000a10"/>
+      <circle cx="84" cy="94" r="4" fill="white" opacity="0.9"/>
+      <ellipse cx="122" cy="100" rx="16" ry="18" fill="#0d0d1a" stroke="#000a1a" stroke-width="2"/>
+      <ellipse cx="122" cy="100" rx="12" ry="14" fill="${c}"/>
+      <ellipse cx="122" cy="100" rx="5" ry="6" fill="#000a10"/>
+      <circle cx="128" cy="94" r="4" fill="white" opacity="0.9"/>
+      <!-- wavy water mouth -->
+      <path d="M82 126 Q88 121 94 126 Q100 131 106 126 Q112 121 118 126" fill="none" stroke="#000a1a" stroke-width="2.5" stroke-linecap="round"/>
+      <ellipse cx="68" cy="115" rx="12" ry="7" fill="${c}" opacity="0.2"/>
+      <ellipse cx="132" cy="115" rx="12" ry="7" fill="${c}" opacity="0.2"/>
+    `,
+    "Pisces": `
+      <circle cx="100" cy="100" r="95" fill="${bg}"/>
+      <circle cx="100" cy="108" r="72" fill="white"/>
+      <ellipse cx="100" cy="108" rx="60" ry="57" fill="#e8c8f8" stroke="#0a001a" stroke-width="2.5"/>
+      <path d="M44 100 Q48 62 100 57 Q152 62 156 100" fill="#120520" stroke="#0a001a" stroke-width="2"/>
+      <path d="M58 68 Q52 48 60 34" fill="none" stroke="#120520" stroke-width="7" stroke-linecap="round"/>
+      <path d="M80 58 Q76 38 84 24" fill="none" stroke="#120520" stroke-width="6" stroke-linecap="round"/>
+      <path d="M120 58 Q124 38 116 24" fill="none" stroke="#120520" stroke-width="6" stroke-linecap="round"/>
+      <path d="M142 68 Q148 48 140 34" fill="none" stroke="#120520" stroke-width="7" stroke-linecap="round"/>
+      <!-- two fish on forehead -->
+      <path d="M88 74 Q93 68 88 62 Q95 65 100 62 Q105 65 112 62 Q107 68 112 74 Q105 71 100 74 Q95 71 88 74" fill="${c}" opacity="0.7" stroke="#0a001a" stroke-width="1"/>
+      <!-- dreamy swirl eyes -->
+      <ellipse cx="78" cy="103" rx="14" ry="15" fill="#0d0010" stroke="#0a001a" stroke-width="2"/>
+      <ellipse cx="78" cy="103" rx="11" ry="12" fill="${c}"/>
+      <path d="M78 96 Q86 100 82 106 Q77 112 71 107 Q67 101 72 97 Q77 93 83 97" fill="none" stroke="#100020" stroke-width="2"/>
+      <circle cx="84" cy="97" r="3" fill="white" opacity="0.9"/>
+      <ellipse cx="122" cy="103" rx="14" ry="15" fill="#0d0010" stroke="#0a001a" stroke-width="2"/>
+      <ellipse cx="122" cy="103" rx="11" ry="12" fill="${c}"/>
+      <path d="M122 96 Q130 100 126 106 Q121 112 115 107 Q111 101 116 97 Q121 93 127 97" fill="none" stroke="#100020" stroke-width="2"/>
+      <circle cx="128" cy="97" r="3" fill="white" opacity="0.9"/>
+      <!-- dreamy smile -->
+      <path d="M85 126 Q100 138 115 126" fill="none" stroke="#0a001a" stroke-width="3" stroke-linecap="round"/>
+      <ellipse cx="68" cy="116" rx="12" ry="7" fill="${c}" opacity="0.3"/>
+      <ellipse cx="132" cy="116" rx="12" ry="7" fill="${c}" opacity="0.3"/>
+      <!-- stars around -->
+      <text x="30" y="80" font-size="10" fill="${c}" opacity="0.6">✦</text>
+      <text x="158" y="78" font-size="8" fill="${c}" opacity="0.6">✦</text>
+    `
+  };
+
+  return faces[sign.name] || faces["Aries"];
+}
+
+function renderCard(sign) {
+  const card = document.getElementById('zodiacCard');
+  card.innerHTML = `
+    <span class="sign-symbol">${sign.symbol}</span>
+    <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+      ${drawFace(sign)}
+    </svg>
+    <p class="sign-name" style="color:${sign.color}">${sign.name}</p>
+    <p class="sign-dates">${sign.dates} · ${sign.element}</p>
+    <div>${sign.vibes.map(v => `<span class="vibe-tag">${v}</span>`).join('')}</div>
+    <div class="divider-card"></div>
+    <p class="horoscope-text">${sign.horoscope}</p>
+    <div class="power-move">
+      <p>⚡ power move this week</p>
+      <p>${sign.powerMove}</p>
+    </div>
+    <div class="share-text">
+      <span>instagram caption ready 👇</span><br/><br/>
+      ${sign.shareCaption}
+    </div>
+    <button class="copy-btn" onclick="copyCaption('${sign.shareCaption.replace(/'/g, "\\'")}')">Copy Caption ↗</button>
+  `;
+}
+
+function copyCaption(text) {
+  navigator.clipboard.writeText(text).then(() => {
+    const btn = document.querySelector('.copy-btn');
+    if (btn) { btn.textContent = 'Copied! 💀'; setTimeout(() => btn.textContent = 'Copy Caption ↗', 2000); }
+  });
+}
+
+// Build sign buttons
+const grid = document.getElementById('signsGrid');
+signs.forEach(sign => {
+  const btn = document.createElement('button');
+  btn.className = 'sign-btn';
+  btn.textContent = `${sign.symbol} ${sign.name}`;
+  btn.onclick = () => {
+    document.querySelectorAll('.sign-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    renderCard(sign);
+  };
+  grid.appendChild(btn);
+});
+</script>
+</body>
+</html>
