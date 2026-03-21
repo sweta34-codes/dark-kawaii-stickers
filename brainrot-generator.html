@@ -1,0 +1,546 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Brainrot Meme Generator</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet"/>
+<style>
+  :root {
+    --bg: #060008;
+    --purple: #9933ff;
+    --pink: #ff44cc;
+    --green: #00ff88;
+    --lavender: #c99ee8;
+    --dark: #1a0a2e;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    background: var(--bg);
+    font-family: 'Space Mono', monospace;
+    color: white;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  header {
+    text-align: center;
+    padding: 2.5rem 1rem 1rem;
+  }
+  header h1 {
+    font-family: 'Syne', sans-serif;
+    font-size: clamp(2rem, 7vw, 4rem);
+    font-weight: 800;
+    background: linear-gradient(135deg, #00ff88, #ff44cc, #9933ff);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    text-transform: uppercase;
+    letter-spacing: -1px;
+  }
+  header p {
+    color: #4d4d4d;
+    font-size: 0.65rem;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    margin-top: 0.4rem;
+    color: #5533aa;
+  }
+
+  .divider {
+    height: 1px;
+    background: linear-gradient(90deg, transparent, #3d1a5a, transparent);
+    margin: 1.5rem 0;
+  }
+
+  .container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 0 1.5rem 4rem;
+  }
+
+  /* Category selector */
+  .category-label {
+    font-size: 0.6rem;
+    color: #5533aa;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    text-align: center;
+    margin-bottom: 0.75rem;
+  }
+
+  .categories {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    justify-content: center;
+    margin-bottom: 2rem;
+  }
+
+  .cat-btn {
+    background: #0f0018;
+    border: 1px solid #2d1a4a;
+    border-radius: 20px;
+    color: #7755aa;
+    font-family: 'Space Mono', monospace;
+    font-size: 0.65rem;
+    padding: 0.4rem 0.9rem;
+    cursor: pointer;
+    transition: all 0.2s;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+  .cat-btn:hover, .cat-btn.active {
+    background: #2d1a4a;
+    border-color: var(--pink);
+    color: white;
+    box-shadow: 0 0 10px #ff44cc33;
+  }
+
+  /* Meme output */
+  .meme-output {
+    background: #0a0015;
+    border: 1px solid #2d1a4a;
+    border-radius: 16px;
+    padding: 2rem;
+    text-align: center;
+    margin-bottom: 1.5rem;
+    min-height: 200px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .meme-output::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(circle at 50% 50%, #1a003322, transparent 70%);
+    pointer-events: none;
+  }
+
+  .meme-emoji {
+    font-size: 3.5rem;
+    animation: bounce 2s ease-in-out infinite;
+  }
+  @keyframes bounce {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-8px); }
+  }
+
+  .meme-text {
+    font-family: 'Syne', sans-serif;
+    font-size: clamp(1.2rem, 4vw, 1.8rem);
+    font-weight: 800;
+    color: white;
+    line-height: 1.3;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    position: relative;
+    z-index: 1;
+  }
+
+  .meme-subtext {
+    font-size: 0.75rem;
+    color: #7755aa;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    position: relative;
+    z-index: 1;
+  }
+
+  .meme-tag {
+    display: inline-block;
+    background: #1a0a2e;
+    border: 1px solid #3d1a5a;
+    border-radius: 20px;
+    padding: 0.25rem 0.75rem;
+    font-size: 0.6rem;
+    color: var(--pink);
+    text-transform: uppercase;
+    letter-spacing: 2px;
+  }
+
+  /* Buttons */
+  .btn-row {
+    display: flex;
+    gap: 0.75rem;
+    justify-content: center;
+    margin-bottom: 2rem;
+    flex-wrap: wrap;
+  }
+
+  .gen-btn {
+    background: linear-gradient(135deg, #6600cc, #cc0088);
+    border: none;
+    border-radius: 10px;
+    color: white;
+    font-family: 'Syne', sans-serif;
+    font-weight: 700;
+    font-size: 0.8rem;
+    padding: 0.75rem 1.5rem;
+    cursor: pointer;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    transition: all 0.2s;
+    box-shadow: 0 0 20px #6600cc44;
+  }
+  .gen-btn:hover { transform: translateY(-2px); box-shadow: 0 0 30px #9933ff66; }
+  .gen-btn:active { transform: scale(0.97); }
+
+  .copy-btn {
+    background: #0f0018;
+    border: 1px solid #3d1a5a;
+    border-radius: 10px;
+    color: var(--lavender);
+    font-family: 'Syne', sans-serif;
+    font-weight: 700;
+    font-size: 0.8rem;
+    padding: 0.75rem 1.5rem;
+    cursor: pointer;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    transition: all 0.2s;
+  }
+  .copy-btn:hover { border-color: var(--purple); color: white; }
+
+  /* Custom builder */
+  .builder-section {
+    background: #0a0015;
+    border: 1px solid #2d1a4a;
+    border-radius: 16px;
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .builder-title {
+    font-family: 'Syne', sans-serif;
+    font-size: 0.8rem;
+    font-weight: 700;
+    color: var(--pink);
+    text-transform: uppercase;
+    letter-spacing: 3px;
+    text-align: center;
+    margin-bottom: 1rem;
+  }
+
+  .builder-row {
+    display: flex;
+    gap: 0.5rem;
+    margin-bottom: 0.75rem;
+    flex-wrap: wrap;
+  }
+
+  .builder-select {
+    flex: 1;
+    min-width: 120px;
+    background: #1a0a2e;
+    border: 1px solid #3d1a5a;
+    border-radius: 8px;
+    color: var(--lavender);
+    font-family: 'Space Mono', monospace;
+    font-size: 0.7rem;
+    padding: 0.6rem 0.8rem;
+    outline: none;
+    cursor: pointer;
+  }
+  .builder-select:focus { border-color: var(--purple); }
+
+  .build-btn {
+    background: #2d1a4a;
+    border: 1px solid var(--purple);
+    border-radius: 8px;
+    color: white;
+    font-family: 'Syne', sans-serif;
+    font-weight: 700;
+    font-size: 0.7rem;
+    padding: 0.6rem 1.2rem;
+    cursor: pointer;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    transition: all 0.2s;
+    white-space: nowrap;
+  }
+  .build-btn:hover { background: #3d1a5a; box-shadow: 0 0 12px #9933ff44; }
+
+  /* History -->
+  .history-section {
+    margin-top: 1.5rem;
+  }
+  .history-title {
+    font-size: 0.6rem;
+    color: #4422aa;
+    text-transform: uppercase;
+    letter-spacing: 3px;
+    text-align: center;
+    margin-bottom: 0.75rem;
+  }
+  .history-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 0.6rem;
+  }
+  .history-item {
+    background: #0f0018;
+    border: 1px solid #1a0a2e;
+    border-radius: 10px;
+    padding: 0.75rem 1rem;
+    font-size: 0.7rem;
+    color: #7755aa;
+    cursor: pointer;
+    transition: all 0.2s;
+    text-align: left;
+  }
+  .history-item:hover { border-color: #3d1a5a; color: var(--lavender); }
+  .history-item .hi-emoji { font-size: 1.2rem; margin-bottom: 0.25rem; display: block; }
+  .history-item .hi-text { color: white; font-size: 0.72rem; font-weight: 700; line-height: 1.4; text-transform: uppercase; }
+
+  /* Floating sparkles */
+  .sparkle {
+    position: fixed;
+    pointer-events: none;
+    animation: floatUp 4s linear infinite;
+    opacity: 0;
+    z-index: 0;
+    font-size: 10px;
+  }
+  @keyframes floatUp {
+    0% { opacity: 0; transform: translateY(0); }
+    20% { opacity: 0.5; }
+    100% { opacity: 0; transform: translateY(-80px); }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>💀 Brainrot Generator</h1>
+  <p>certified cooked · gen z edition · 2026</p>
+</header>
+
+<div class="divider"></div>
+
+<div class="container">
+
+  <!-- Category -->
+  <p class="category-label">choose your brainrot level</p>
+  <div class="categories" id="categories">
+    <button class="cat-btn active" onclick="setCategory('all', this)">all chaos</button>
+    <button class="cat-btn" onclick="setCategory('pov', this)">POV</button>
+    <button class="cat-btn" onclick="setCategory('npc', this)">NPC mode</button>
+    <button class="cat-btn" onclick="setCategory('slay', this)">slay era</button>
+    <button class="cat-btn" onclick="setCategory('dead', this)">dead inside</button>
+    <button class="cat-btn" onclick="setCategory('unhinged', this)">unhinged</button>
+    <button class="cat-btn" onclick="setCategory('villain', this)">villain arc</button>
+  </div>
+
+  <!-- Meme output -->
+  <div class="meme-output" id="memeOutput">
+    <div class="meme-emoji" id="memeEmoji">💀</div>
+    <div class="meme-text" id="memeText">tap generate to<br/>unlock your brainrot</div>
+    <div class="meme-subtext" id="memeSubtext">your daily dose of chaos</div>
+    <span class="meme-tag" id="memeTag">#brainrot</span>
+  </div>
+
+  <!-- Buttons -->
+  <div class="btn-row">
+    <button class="gen-btn" onclick="generateMeme()">⚡ Generate</button>
+    <button class="copy-btn" onclick="copyMeme()">Copy ↗</button>
+  </div>
+
+  <!-- Custom builder -->
+  <div class="builder-section">
+    <p class="builder-title">🔧 build your own</p>
+    <div class="builder-row">
+      <select class="builder-select" id="sel1">
+        <option>POV:</option>
+        <option>me:</option>
+        <option>my brain:</option>
+        <option>the universe:</option>
+        <option>2026:</option>
+        <option>main character energy:</option>
+        <option>NPC behavior:</option>
+      </select>
+      <select class="builder-select" id="sel2">
+        <option>you wake up and</option>
+        <option>it's 3am and</option>
+        <option>no thoughts just</option>
+        <option>absolutely cooked because</option>
+        <option>crying but making it cute because</option>
+        <option>in your villain arc and</option>
+        <option>living rent free in my head:</option>
+      </select>
+    </div>
+    <div class="builder-row">
+      <select class="builder-select" id="sel3">
+        <option>chose violence</option>
+        <option>said nothing but meant everything</option>
+        <option>blocked everyone and thrived</option>
+        <option>ate and left no crumbs</option>
+        <option>gaslit myself into thinking it's fine</option>
+        <option>manifested chaos</option>
+        <option>dissociated but make it aesthetic</option>
+        <option>went full NPC</option>
+        <option>slayed without trying</option>
+        <option>cried then forgot why</option>
+      </select>
+      <button class="build-btn" onclick="buildCustom()">Build ↗</button>
+    </div>
+  </div>
+
+  <!-- History -->
+  <div class="history-section">
+    <p class="history-title">recent brainrot ↓</p>
+    <div class="history-grid" id="historyGrid">
+      <div class="history-item" style="opacity:0.3; cursor:default;">
+        <span class="hi-emoji">👻</span>
+        <span class="hi-text">your memes will appear here...</span>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+const memes = {
+  pov: [
+    { emoji: "💀", text: "POV: you said\n'i'll sleep early'", sub: "it's 4am", tag: "#relatable" },
+    { emoji: "🫠", text: "POV: you're fine\nbut you're NOT fine", sub: "classic", tag: "#dissociating" },
+    { emoji: "😐", text: "POV: your brain\ndecided to remember\nevery cringe memory at 2am", sub: "why tho", tag: "#brainrot" },
+    { emoji: "👁️", text: "POV: you opened\ninstagram 'for a second'", sub: "3 hours later", tag: "#npc" },
+    { emoji: "🌀", text: "POV: you manifested\nchaos again", sub: "and it worked", tag: "#maincharacter" },
+  ],
+  npc: [
+    { emoji: "🤖", text: "NPC mode:\nactivated", sub: "low battery detected", tag: "#npc" },
+    { emoji: "📺", text: "loading...\nno thoughts", sub: "head empty", tag: "#npcbehavior" },
+    { emoji: "⚙️", text: "error 404:\nwill to live\nnot found", sub: "rebooting...", tag: "#glitch" },
+    { emoji: "🔋", text: "operating at\n2% battery", sub: "still here tho", tag: "#lowbattery" },
+    { emoji: "🎮", text: "side character\nrunning main\ncharacter storyline", sub: "unhinged", tag: "#npc" },
+  ],
+  slay: [
+    { emoji: "👑", text: "woke up\nchose slay", sub: "no further questions", tag: "#slaymode" },
+    { emoji: "✨", text: "ate\nleft no crumbs\ndissociated", sub: "that girl era", tag: "#thatgirl" },
+    { emoji: "💅", text: "delulu is\nthe solulu", sub: "manifesting rn", tag: "#delulu" },
+    { emoji: "🔥", text: "main character\nenergy only", sub: "supporting cast dismissed", tag: "#maincharacter" },
+    { emoji: "⚡", text: "in my\nglow up era\nnobody warned you", sub: "slay", tag: "#glowup" },
+  ],
+  dead: [
+    { emoji: "💀", text: "dead inside\nbut make it\naesthetic", sub: "the vibe check failed", tag: "#deadinside" },
+    { emoji: "🪦", text: "i'm fine\n(i am not fine)", sub: "chronic dissociation era", tag: "#imfine" },
+    { emoji: "😶", text: "no thoughts\nhead empty\njust vibes", sub: "cooked", tag: "#nothoughts" },
+    { emoji: "🌑", text: "the void\ncalled\ni answered", sub: "we're on speaking terms", tag: "#void" },
+    { emoji: "☠️", text: "existing\nuntil further\nnotice", sub: "barely", tag: "#surviving" },
+  ],
+  unhinged: [
+    { emoji: "🌀", text: "certified cooked\nno refunds", sub: "terms and conditions apply", tag: "#unhinged" },
+    { emoji: "🫠", text: "i am\na normal person\n(i am lying)", sub: "completely unhinged", tag: "#lying" },
+    { emoji: "🔮", text: "the prophecy\nsaid i would\ncause problems", sub: "on purpose", tag: "#chaotic" },
+    { emoji: "⚡", text: "woke up\nchose chaos\nno regrets", sub: "villain arc loading", tag: "#chaos" },
+    { emoji: "🐀", text: "gaslit myself\ninto thinking\ni'm okay", sub: "iconic behavior", tag: "#gaslighting" },
+  ],
+  villain: [
+    { emoji: "🦹", text: "villain arc\nactivated\ncannot be stopped", sub: "origin story incoming", tag: "#villainera" },
+    { emoji: "🖤", text: "they pushed me\nnow watch", sub: "redemption arc cancelled", tag: "#villain" },
+    { emoji: "🌑", text: "the villain\nwas just\na misunderstood main character", sub: "plot twist", tag: "#plottwist" },
+    { emoji: "⚔️", text: "chose\nmy villain era\npermanently", sub: "no going back", tag: "#permanent" },
+    { emoji: "😈", text: "i don't have\na villain arc\ni have a\nvillain lifestyle", sub: "correction", tag: "#lifestyle" },
+  ]
+};
+
+// Combine all
+memes.all = Object.values(memes).flat();
+
+let currentCategory = 'all';
+let history = [];
+
+function setCategory(cat, btn) {
+  currentCategory = cat;
+  document.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  generateMeme();
+}
+
+function generateMeme() {
+  const pool = memes[currentCategory] || memes.all;
+  const meme = pool[Math.floor(Math.random() * pool.length)];
+  displayMeme(meme);
+  addToHistory(meme);
+}
+
+function displayMeme(meme) {
+  document.getElementById('memeEmoji').textContent = meme.emoji;
+  document.getElementById('memeText').innerHTML = meme.text.replace(/\n/g, '<br/>');
+  document.getElementById('memeSubtext').textContent = meme.sub;
+  document.getElementById('memeTag').textContent = meme.tag;
+
+  // Flash animation
+  const output = document.getElementById('memeOutput');
+  output.style.borderColor = '#cc44ff';
+  setTimeout(() => output.style.borderColor = '#2d1a4a', 300);
+}
+
+function buildCustom() {
+  const p1 = document.getElementById('sel1').value;
+  const p2 = document.getElementById('sel2').value;
+  const p3 = document.getElementById('sel3').value;
+  const custom = {
+    emoji: ['💀','🫠','😐','🌀','⚡','🔥','👑'][Math.floor(Math.random()*7)],
+    text: `${p1} ${p2}\n${p3}`,
+    sub: "custom brainrot",
+    tag: "#mybrainrot"
+  };
+  displayMeme(custom);
+  addToHistory(custom);
+}
+
+function addToHistory(meme) {
+  history.unshift(meme);
+  if (history.length > 6) history = history.slice(0, 6);
+  renderHistory();
+}
+
+function renderHistory() {
+  const grid = document.getElementById('historyGrid');
+  grid.innerHTML = history.map(m => `
+    <div class="history-item" onclick="displayMeme(${JSON.stringify(m).replace(/"/g, '&quot;')})">
+      <span class="hi-emoji">${m.emoji}</span>
+      <span class="hi-text">${m.text.replace(/\n/g, ' ')}</span>
+    </div>
+  `).join('');
+}
+
+function copyMeme() {
+  const emoji = document.getElementById('memeEmoji').textContent;
+  const text = document.getElementById('memeText').innerText;
+  const sub = document.getElementById('memeSubtext').textContent;
+  const tag = document.getElementById('memeTag').textContent;
+  const full = `${emoji} ${text}\n\n${sub}\n\n${tag} #genzmemes #darkkawaiiart #brainrot`;
+  navigator.clipboard.writeText(full).then(() => {
+    const btn = document.querySelector('.copy-btn');
+    btn.textContent = 'Copied! 💀';
+    setTimeout(() => btn.textContent = 'Copy ↗', 2000);
+  });
+}
+
+// Floating sparkles
+const syms = ['✦','★','☆','💀','✧'];
+setInterval(() => {
+  const s = document.createElement('div');
+  s.className = 'sparkle';
+  s.textContent = syms[Math.floor(Math.random()*syms.length)];
+  s.style.left = Math.random()*100+'vw';
+  s.style.bottom = '0';
+  s.style.color = ['#cc44ff','#ff44cc','#00ff88'][Math.floor(Math.random()*3)];
+  s.style.animationDelay = Math.random()*2+'s';
+  document.body.appendChild(s);
+  setTimeout(() => s.remove(), 4500);
+}, 800);
+
+// Auto generate on load
+generateMeme();
+</script>
+</body>
+</html>
